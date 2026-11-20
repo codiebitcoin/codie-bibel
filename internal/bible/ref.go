@@ -12,11 +12,11 @@ import (
 // EndChapter's EndVerse, its ends inclusive. One verse has EndChapter 0,
 // which reads as Chapter; one chapter has both Verse and EndVerse 0.
 type Ref struct {
-	Book        string // USFM code, as GEN
-	Chapter     int
-	Verse       int
-	EndChapter  int
-	EndVerse    int
+	Book       string // USFM code, as GEN
+	Chapter    int
+	Verse      int
+	EndChapter int
+	EndVerse   int
 }
 
 // String writes the reference as people do, as "John 3:16" or "Psalm 23:1-6".

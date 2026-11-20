@@ -120,7 +120,7 @@ func (a *app) centered(c *ui.Context, err string, retry func()) {
 // pageHeading is a page's title, and what sits at its right.
 func (a *app) pageHeading(c *ui.Context, title string, right func()) {
 	top, _ := a.insets(c)
-	ui.Row(c).Padding(top, 24, 0, 24).Height(top+40).Gap(12).AlignItems(ui.Center).Children(func() {
+	ui.Row(c).Padding(top, 24, 0, 24).Height(top + 40).Gap(12).AlignItems(ui.Center).Children(func() {
 		ui.Text(c, title).FontSize(22).FontWeight(700).TextColor(a.pal.text)
 		ui.Box(c).Grow(1)
 		if right != nil {

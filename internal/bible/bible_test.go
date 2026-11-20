@@ -1,8 +1,8 @@
 package bible
 
 import (
-	"compress/gzip"
 	"bytes"
+	"compress/gzip"
 	"encoding/json"
 	"strings"
 	"testing"

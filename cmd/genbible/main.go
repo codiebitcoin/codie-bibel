@@ -138,6 +138,17 @@ func main() {
 	writeIndex(*out, index)
 	os.WriteFile(filepath.Join(*out, "LICENSES.md"), []byte(licenses.String()), 0o644)
 	fmt.Printf("wrote %s/index.json and LICENSES.md\n", *out)
+	// The lectionary goes with the Bibles: it only holds references to
+	// them. It lives beside them, in seasons/data under the same internal.
+	seasonsOut := strings.TrimSuffix(*out, "/bible/data") + "/seasons/data"
+	if err := genLectionary(*cache, seasonsOut); err != nil {
+		fatal(err)
+	}
+	// Morning and Evening lives with the devotions it opens.
+	devotionOut := strings.TrimSuffix(*out, "/bible/data") + "/devotion/data"
+	if err := genSpurgeon(*cache, devotionOut); err != nil {
+		fatal(err)
+	}
 }
 
 func fatal(err error) {
@@ -699,7 +710,7 @@ var svdAbbrevs = map[string]string{
 
 type svdDoc struct {
 	Books map[string]struct {
-		Name     string `json:"name"`
+		Name     string                       `json:"name"`
 		Chapters map[string]map[string]string `json:"chapters"`
 	} `json:"books"`
 }

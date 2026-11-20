@@ -17,7 +17,7 @@ import (
 type pageKind int
 
 const (
-	pageRead     pageKind = iota
+	pageRead pageKind = iota
 	pageDevotions
 	pagePray
 	pageStories
