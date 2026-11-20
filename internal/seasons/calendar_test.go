@@ -74,7 +74,7 @@ func TestFeasts2026(t *testing.T) {
 // countdown points at Christ the King.
 func TestTodayOrdinary(t *testing.T) {
 	season, feast, next, days := Today(day(2026, time.November, 20))
-	if season.Code != "ordinary" || season.Color != green {
+	if season.Code != "ordinary" || season.Color != Green {
 		t.Errorf("the season reads %s, %s", season.Code, season.Color)
 	}
 	if feast != nil {
@@ -110,7 +110,7 @@ func TestTodayAdvent(t *testing.T) {
 // Holy Week wears red the week before Easter.
 func TestTodayHolyWeek(t *testing.T) {
 	season, feast, _, _ := Today(day(2027, time.March, 26))
-	if season.Code != "holy-week" || season.Color != red {
+	if season.Code != "holy-week" || season.Color != Red {
 		t.Errorf("the season reads %s, %s", season.Code, season.Color)
 	}
 	if feast == nil || feast.Code != "good-friday" {
@@ -121,7 +121,7 @@ func TestTodayHolyWeek(t *testing.T) {
 // The Easter season runs white from Easter Day to the eve of Trinity.
 func TestTodayEasterSeason(t *testing.T) {
 	season, feast, _, _ := Today(day(2027, time.April, 10))
-	if season.Code != "easter" || season.Color != white {
+	if season.Code != "easter" || season.Color != White {
 		t.Errorf("the season reads %s, %s", season.Code, season.Color)
 	}
 	if feast != nil {

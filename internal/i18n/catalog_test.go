@@ -7,6 +7,7 @@ import (
 	"io/fs"
 	"path/filepath"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 	"testing"
@@ -92,11 +93,14 @@ func literal(e ast.Expr) (string, bool) {
 // with verbs keeps them.
 func TestCatalogHasEveryKey(t *testing.T) {
 	verbs := regexp.MustCompile(`%(\[\d+\])?[-+# 0-9.]*[a-zA-Z]`)
+	// The verbs compare in a sorted order: a translation may number them
+	// and read them in its own order, as Tf allows.
 	norm := func(s string) string {
 		var out []string
 		for _, v := range verbs.FindAllString(s, -1) {
 			out = append(out, regexp.MustCompile(`\[\d+\]`).ReplaceAllString(v, ""))
 		}
+		sort.Strings(out)
 		return strings.Join(out, " ")
 	}
 	keys := map[string]string{}

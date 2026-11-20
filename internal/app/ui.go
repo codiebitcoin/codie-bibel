@@ -31,6 +31,7 @@ func (a *app) view(c *ui.Context) {
 			side.Children(func() { a.sidebar(c) })
 			ui.Box(c.Key("main")).Grow(1).Background(p.bg).Children(func() {
 				a.content(c)
+				a.playerBar(c)
 			})
 		})
 	})

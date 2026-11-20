@@ -7,14 +7,14 @@ package seasons
 
 import "time"
 
-// color is a liturgical color, what the season is clothed in.
-type color string
+// Color is a liturgical color, what the season is clothed in.
+type Color string
 
 const (
-	white  color = "white"  // Christmas, Epiphany, Easter: joy
-	green  color = "green"  // the growing seasons: Ordinary Time
-	purple color = "purple" // Advent, Lent: waiting and penitence
-	red    color = "red"    // Holy Week, Pentecost: blood and fire
+	White  Color = "white"  // Christmas, Epiphany, Easter: joy
+	Green  Color = "green"  // the growing seasons: Ordinary Time
+	Purple Color = "purple" // Advent, Lent: waiting and penitence
+	Red    Color = "red"    // Holy Week, Pentecost: blood and fire
 )
 
 // Feast is one day of the church year.
@@ -29,7 +29,7 @@ type Feast struct {
 type Season struct {
 	Name  string
 	Code  string
-	Color color
+	Color Color
 	From  time.Time
 	To    time.Time
 }
@@ -131,15 +131,15 @@ func Seasons(year int) []Season {
 	epiphanyStart := time.Date(year+1, time.January, 6, 0, 0, 0, 0, utc)
 	epiphanyEnd := nextSunday(epiphanyStart).AddDate(0, 0, -1)
 	return []Season{
-		{Name: "Advent", Code: "advent", Color: purple, From: start, To: time.Date(year, time.December, 24, 0, 0, 0, 0, utc)},
-		{Name: "Christmas", Code: "christmas", Color: white, From: time.Date(year, time.December, 25, 0, 0, 0, 0, utc), To: time.Date(year+1, time.January, 5, 0, 0, 0, 0, utc)},
-		{Name: "Epiphany", Code: "epiphany", Color: white, From: epiphanyStart, To: epiphanyEnd},
-		{Name: "Ordinary Time", Code: "ordinary", Color: green, From: nextSunday(epiphanyStart), To: ash.AddDate(0, 0, -1)},
-		{Name: "Lent", Code: "lent", Color: purple, From: ash, To: holySat},
-		{Name: "Holy Week", Code: "holy-week", Color: red, From: palm, To: holySat},
-		{Name: "Easter", Code: "easter", Color: white, From: easter, To: trinity.AddDate(0, 0, -1)},
-		{Name: "Pentecost", Code: "pentecost", Color: red, From: pentecost, To: trinity.AddDate(0, 0, -1)},
-		{Name: "Ordinary Time", Code: "ordinary", Color: green, From: trinity, To: end(year)},
+		{Name: "Advent", Code: "advent", Color: Purple, From: start, To: time.Date(year, time.December, 24, 0, 0, 0, 0, utc)},
+		{Name: "Christmas", Code: "christmas", Color: White, From: time.Date(year, time.December, 25, 0, 0, 0, 0, utc), To: time.Date(year+1, time.January, 5, 0, 0, 0, 0, utc)},
+		{Name: "Epiphany", Code: "epiphany", Color: White, From: epiphanyStart, To: epiphanyEnd},
+		{Name: "Ordinary Time", Code: "ordinary", Color: Green, From: nextSunday(epiphanyStart), To: ash.AddDate(0, 0, -1)},
+		{Name: "Lent", Code: "lent", Color: Purple, From: ash, To: holySat},
+		{Name: "Holy Week", Code: "holy-week", Color: Red, From: palm, To: holySat},
+		{Name: "Easter", Code: "easter", Color: White, From: easter, To: trinity.AddDate(0, 0, -1)},
+		{Name: "Pentecost", Code: "pentecost", Color: Red, From: pentecost, To: trinity.AddDate(0, 0, -1)},
+		{Name: "Ordinary Time", Code: "ordinary", Color: Green, From: trinity, To: end(year)},
 	}
 }
 
@@ -193,7 +193,7 @@ func seasonOf(day time.Time, year int) Season {
 			return s
 		}
 	}
-	return Season{Code: "ordinary", Color: green, Name: "Ordinary Time", From: day, To: day}
+	return Season{Code: "ordinary", Color: Green, Name: "Ordinary Time", From: day, To: day}
 }
 
 func nextFeast(day time.Time, year int) (Feast, int) {

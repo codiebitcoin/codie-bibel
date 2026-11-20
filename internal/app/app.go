@@ -11,6 +11,7 @@ import (
 
 	"codie-bibel/internal/bible"
 	"codie-bibel/internal/device"
+	"codie-bibel/internal/devotion"
 	"codie-bibel/internal/hymn"
 	"codie-bibel/internal/i18n"
 	"codie-bibel/internal/player"
@@ -50,8 +51,18 @@ type app struct {
 	hymnFile map[string]string
 
 	// The reader's own data, and the Read page's state.
-	store *store.Store
-	rd    *readerState
+	store    *store.Store
+	rd       *readerState
+	spurgeon *devotion.Spurgeon
+
+	// The prayer walk: the step it stands at, the confession's field,
+	// and the prayer list's field.
+	prayStep    int
+	prayText    string
+	prayerDraft string
+
+	// The story open on the Stories page, by its code.
+	storyCode string
 
 	navScroll  ui.ScrollState
 	pageScroll ui.ScrollState

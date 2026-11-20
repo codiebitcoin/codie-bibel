@@ -105,6 +105,14 @@ func topBar(c *ui.Context) float32 {
 	return max(c.TitleBar().Height, topBarHeight)
 }
 
+// cardBg is a card's background, filled when it's the one chosen.
+func cardBg(p palette, chosen bool) ui.Color {
+	if chosen {
+		return p.accent.Alpha(0.12)
+	}
+	return p.cardShade
+}
+
 // centered shows a message, with a retry button if retry is set: what a
 // page shows in place of what failed to load.
 func (a *app) centered(c *ui.Context, err string, retry func()) {
