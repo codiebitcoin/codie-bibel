@@ -1,7 +1,12 @@
 package app
 
 import (
+	"context"
 	"os"
+	"path/filepath"
+	"time"
+
+	"github.com/egoist/mygo"
 
 	"github.com/egoist/mygo/ui"
 
@@ -39,7 +44,9 @@ func (a *app) devicePage(c *ui.Context) {
 	})
 }
 
-// personaCard is the character the device speaks as, Jesus or the monk.
+// personaCard is the character the device speaks as, Jesus or the monk,
+// with the model and the voice the reader may give it. The device's own
+// face and voice answer when none has been given.
 func (a *app) personaCard(c *ui.Context) {
 	current := a.settings.CodiePersona
 	if current == "" {
@@ -60,12 +67,111 @@ func (a *app) personaCard(c *ui.Context) {
 				}
 			}
 		})
-		for _, p := range device.Personas {
-			if p.Code == current {
-				ui.Text(c, p.Summary).TextColor(a.pal.muted).FontSize(12.5).MaxWidth(520)
+		for i := range device.Personas {
+			p := &device.Personas[i]
+			if p.Code != current {
+				continue
 			}
+			ui.Text(c, p.Summary).TextColor(a.pal.muted).FontSize(12.5).MaxWidth(520)
+			// The face and the voice, as they stand.
+			face := T("The device's own face.")
+			if a.seedVRM(p) != nil {
+				face = Tf("Wearing the model file %s.", p.VRM)
+			}
+			ui.Text(c, face).TextColor(a.pal.faint).FontSize(12)
+			voice := T("The device's own voice.")
+			if a.settings.CodieVoice[p.Code] != "" {
+				voice = T("A voice of the reader's cloning.")
+			}
+			ui.Text(c, voice).TextColor(a.pal.faint).FontSize(12)
+			// Give it another face, and another voice.
+			ui.Row(c).Gap(8).Children(func() {
+				if ui.Button(c.Key("model-upload-"+p.Name), T("Upload a model…")).Clicked() {
+					a.uploadModel(p)
+				}
+				if ui.Button(c.Key("voice-upload-"+p.Name), T("Upload a voice…")).Clicked() {
+					a.uploadVoice(p)
+				}
+			})
 		}
 	})
+}
+
+// uploadModel asks for a VRM file, keeps it as the persona's model, and
+// dresses the device in it.
+func (a *app) uploadModel(p *device.Persona) {
+	paths, err := mygo.Dialog.Open(mygo.OpenDialogOptions{
+		Title:       Tf("A model for %s", p.Name),
+		ButtonLabel: T("Open"),
+		Filters:     []mygo.FileFilter{{Name: "VRM model", Extensions: []string{"vrm"}}},
+	})
+	if err != nil || len(paths) == 0 {
+		return
+	}
+	b, err := os.ReadFile(paths[0])
+	if err != nil {
+		a.toast = err.Error()
+		a.redraw()
+		return
+	}
+	// Kept where the pairing guide finds it, so the next pairing wears it
+	// too.
+	name := p.VRM
+	if name == "" {
+		name = "model.vrm"
+	}
+	if err := os.WriteFile(userDataDir(name), b, 0o644); err != nil {
+		a.toast = err.Error()
+		a.redraw()
+		return
+	}
+	with := *p
+	a.applyPersona(&with, b)
+}
+
+// uploadVoice asks for a sample of a voice, clones it on the device, and
+// wears it on the character. The cloning is the device's own work and
+// takes its time.
+func (a *app) uploadVoice(p *device.Persona) {
+	paths, err := mygo.Dialog.Open(mygo.OpenDialogOptions{
+		Title:       Tf("A voice for %s", p.Name),
+		ButtonLabel: T("Open"),
+		Filters:     []mygo.FileFilter{{Name: "Audio", Extensions: []string{"wav", "mp3", "m4a", "ogg", "flac"}}},
+	})
+	if err != nil || len(paths) == 0 {
+		return
+	}
+	audio, err := os.ReadFile(paths[0])
+	if err != nil {
+		a.toast = err.Error()
+		a.redraw()
+		return
+	}
+	filename := filepath.Base(paths[0])
+	code := p.Code
+	a.toast = T("Cloning the voice; this takes a while…")
+	a.redraw()
+	go func() {
+		ctx, cancel := context.WithTimeout(context.Background(), 25*time.Minute)
+		defer cancel()
+		voiceID, err := a.dev.CloneVoice(ctx, audio, filename, p.Name)
+		a.post(func() {
+			switch {
+			case err == nil && voiceID != "":
+				if a.settings.CodieVoice == nil {
+					a.settings.CodieVoice = map[string]string{}
+				}
+				a.settings.CodieVoice[code] = voiceID
+				a.settings.save()
+				with := *p
+				with.VoiceID = voiceID
+				a.applyPersona(&with, nil)
+			case err != nil:
+				a.toast = err.Error()
+				a.redraw()
+			}
+		})
+	}()
 }
 
 // actionCard is the action group: how the device's own motions read,
@@ -101,20 +207,28 @@ func (a *app) choosePersona(code string) {
 	}
 	a.settings.CodiePersona = code
 	a.settings.save()
-	a.applyPersona(p)
+	a.applyPersona(p, nil)
 }
 
 // applyPersona sends a persona to the device: its words, its action
-// group, and its face, where a model file has been given. It runs as it
-// is asked, and the toast says how it went.
-func (a *app) applyPersona(p *device.Persona) {
+// group, its voice, and its face — the model bytes given win over the
+// persona's file. It runs as it is asked, and the toast says how it
+// went.
+func (a *app) applyPersona(p *device.Persona, vrmOverride []byte) {
 	if a.dev == nil || !a.dev.Paired() {
 		a.toast = T("Pair a device first")
 		a.redraw()
 		return
 	}
-	vrm := a.seedVRM(p)
-	persona := *p
+	vrm := vrmOverride
+	if vrm == nil {
+		vrm = a.seedVRM(p)
+	}
+	with := *p
+	if v := a.settings.CodieVoice[p.Code]; v != "" {
+		with.VoiceID = v
+	}
+	persona := with
 	go func() {
 		err := appPersonaApply(a.dev, persona, vrm)
 		a.post(func() {
@@ -167,5 +281,5 @@ func (a *app) setPersonaIntensity(v int) {
 	}
 	with := *p
 	with.Group.Intensity = v
-	a.applyPersona(&with)
+	a.applyPersona(&with, nil)
 }

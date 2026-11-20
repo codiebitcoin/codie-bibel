@@ -32,6 +32,8 @@ type settings struct {
 	// CodiePersona is the code of the character the device speaks as,
 	// as "jesus" or "monk".
 	CodiePersona string `json:"codiePersona,omitempty"`
+	// CodieVoice is the cloned voice each character wears, by its code.
+	CodieVoice map[string]string `json:"codieVoice,omitempty"`
 	// CodieSetupDone says the pairing guide has been walked (or skipped).
 	CodieSetupDone bool `json:"codieSetupDone,omitempty"`
 	// MusicAuto plays the hymns when the app opens, as the reader turns

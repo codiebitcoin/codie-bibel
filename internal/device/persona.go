@@ -37,6 +37,7 @@ type Persona struct {
 	Summary string // one line under the name
 	Prompt  string // what the device hears as its character's own words
 	VRM     string // the embedded model's file, or "" for the device's own
+	VoiceID string // a cloned voice of the device's, or "" for its default
 	Group   ActionGroup
 }
 

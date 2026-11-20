@@ -249,6 +249,23 @@ func (d *Device) ApplyPersona(ctx context.Context, p Persona, vrm []byte) error 
 	return nil
 }
 
+// CloneVoice clones a voice from a sample the reader gives — a reading
+// of a verse, a greeting — and wears it on the app's slot. It is the
+// device's own work and takes its time; the context bounds it.
+func (d *Device) CloneVoice(ctx context.Context, audio []byte, filename, name string) (string, error) {
+	if !d.Paired() {
+		return "", errNotPaired
+	}
+	res, err := d.client.SetCloneVoice(ctx, d.cc(name), audio, filename, &clt01.CloneVoiceOptions{
+		VoiceName: name,
+		Apply:     true,
+	})
+	if err != nil {
+		return "", err
+	}
+	return res.VoiceID, nil
+}
+
 // SetAlarm asks the device to speak at a time, as a feast's reminder does.
 func (d *Device) SetAlarm(ctx context.Context, label string, at time.Time) error {
 	if !d.Paired() {

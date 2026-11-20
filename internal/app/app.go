@@ -109,6 +109,37 @@ func (a *app) open(p pageKind) {
 	a.redraw()
 }
 
+// applyLanguage speaks the settings' language, here and in the system:
+// mygo lays its windows from the right for the languages that read so,
+// as Arabic does.
+func (a *app) applyLanguage() {
+	// The system's languages come of mygo's main thread, which a test
+	// doesn't serve: without one, the setting or English speaks.
+	preferred := []string(nil)
+	if a.postFn == nil {
+		preferred = systemLanguages()
+	}
+	lang := i18n.Resolve(a.settings.Language, preferred)
+	i18n.SetLanguage(lang)
+	if a.win == nil {
+		return // tests have no window, and mygo speaks to its main thread
+	}
+	tags := make([]string, 0, len(i18n.Languages))
+	for _, l := range i18n.Languages {
+		tags = append(tags, l.Code)
+	}
+	mygo.App.SetLanguages(tags...)
+	mygo.App.SetLocale(lang)
+}
+
+// setLanguage keeps the language the reader chose, and speaks it at once.
+func (a *app) setLanguage(code string) {
+	a.settings.Language = code
+	a.settings.save()
+	a.applyLanguage()
+	a.redraw()
+}
+
 // wireDevice makes the device of the saved pairing, and the queue of
 // readings it walks.
 func (a *app) wireDevice() {
@@ -149,7 +180,7 @@ func Run(bibles *bible.Registry) error {
 	mygo.App.WhenReady(func() {
 		a.settings = loadSettings()
 		a.settings.applyAppearance()
-		i18n.SetLanguage(i18n.Resolve(a.settings.Language, systemLanguages()))
+		a.applyLanguage()
 		a.wireDevice()
 		a.wireHymns()
 		a.win = mygo.NewWindow(mygo.WindowOptions{

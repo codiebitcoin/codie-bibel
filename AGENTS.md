@@ -27,6 +27,10 @@ Only write a test for behaviour that can actually break. If the code under test 
 - Start each test with a one-sentence comment saying the behaviour it checks, in the style of the code.
 - Run `GOTOOLCHAIN=auto go test ./internal/...` before committing, and run a new UI test with `-count=5`. Fix or delete a flaky test; don't retry it.
 
+## Files
+
+No Go file runs past 800 lines: one past it splits, by page or by concern, as ui_reader splits into its books, chapter and verse files. The catalogs are one file per language, which stays small on its own.
+
 ## Text and data
 
 - Every string the reader sees goes through `i18n.T`/`Tf` with a `zh_cn.go` entry: `TestNoChineseInCode` rejects Chinese literals in code, and `TestCatalogHasEveryKey` rejects an untranslated key. Scripture, devotional and hymn text is data — those packages are excluded from the Chinese check.
