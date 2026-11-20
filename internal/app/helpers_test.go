@@ -47,9 +47,15 @@ func TestMain(m *testing.M) {
 	os.Exit(code)
 }
 
-// newTestApp is an app for a test to drive: no window, no device.
+// newTestApp is an app for a test to drive: no window, an unpaired
+// device, and the queue over it.
 func newTestApp() *app {
-	return &app{settings: defaultSettings(), page: pageRead}
+	a := &app{settings: defaultSettings(), page: pageRead}
+	// The posts run where they happen, so a goroutine's answer lands at
+	// once; a test that wants them collected sets posts(a).
+	a.postFn = func(fn func()) { fn() }
+	a.wireDevice()
+	return a
 }
 
 // posts collects what the app posts to the main thread, for a test to run with

@@ -37,11 +37,6 @@ func (a *app) musicPage(c *ui.Context) {
 	a.coming(c, T("Hymns to play quietly in the background."))
 }
 
-func (a *app) devicePage(c *ui.Context) {
-	a.pageHeading(c, T("Device"), nil)
-	a.coming(c, T("Pair a codie device to read the Bible aloud."))
-}
-
 func (a *app) settingsPage(c *ui.Context) {
 	a.pageHeading(c, T("Settings"), nil)
 	a.coming(c, T("Language, appearance, and the reader."))

@@ -7,6 +7,7 @@ import (
 
 	"github.com/egoist/mygo"
 
+	"codie-bibel/internal/device"
 	"codie-bibel/internal/i18n"
 )
 
@@ -26,8 +27,16 @@ type settings struct {
 	Serif bool `json:"serif"`
 	// Translation is the ID of the Bible translation last read.
 	Translation string `json:"translation,omitempty"`
+	// Codie is the paired device, when there is one.
+	Codie *device.Creds `json:"codie,omitempty"`
+	// CodiePersona is the code of the character the device speaks as,
+	// as "jesus" or "monk".
+	CodiePersona string `json:"codiePersona,omitempty"`
 	// CodieSetupDone says the pairing guide has been walked (or skipped).
 	CodieSetupDone bool `json:"codieSetupDone,omitempty"`
+	// MusicAuto plays the hymns when the app opens, as the reader turns
+	// it on.
+	MusicAuto bool `json:"musicAuto"`
 	// SeasonReminders marks the app's keeping of the church seasons: the
 	// feast card shows, and the tray counts down to the next feast.
 	SeasonReminders bool `json:"seasonReminders"`

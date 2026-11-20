@@ -9,6 +9,7 @@ require (
 	github.com/hajimehoshi/go-mp3 v0.3.4
 	github.com/jfreymuth/oggvorbis v1.0.5
 	github.com/tphakala/go-aac v0.7.1
+	workshop_inner_sdk v0.0.0-00010101000000-000000000000
 )
 
 require (
@@ -31,3 +32,5 @@ require (
 	golang.org/x/sys v0.48.0 // indirect
 	golang.org/x/text v0.43.0 // indirect
 )
+
+replace workshop_inner_sdk => ./third_party/workshop_inner_sdk

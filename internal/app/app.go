@@ -10,7 +10,12 @@ import (
 	"github.com/egoist/mygo/ui"
 
 	"codie-bibel/internal/bible"
+	"codie-bibel/internal/device"
+	"codie-bibel/internal/hymn"
 	"codie-bibel/internal/i18n"
+	"codie-bibel/internal/player"
+	"codie-bibel/internal/player/media"
+	"codie-bibel/internal/queue"
 )
 
 // pageKind is one of the app's pages.
@@ -36,9 +41,18 @@ type app struct {
 	settings settings
 	bibles   *bible.Registry
 
+	// The device and what it reads, and the hymns' player.
+	dev      *device.Device
+	bq       *queue.Queue
+	pl       *player.Player
+	hymnDir  string
+	hymnFile map[string]string
+
 	navScroll  ui.ScrollState
 	pageScroll ui.ScrollState
 	scrolled   pageKind // the page pageScroll is of
+
+	wizard wizardState // the pairing guide, until it's done
 
 	toast string
 
@@ -95,6 +109,36 @@ func (a *app) open(p pageKind) {
 	a.redraw()
 }
 
+// wireDevice makes the device of the saved pairing, and the queue of
+// readings it walks.
+func (a *app) wireDevice() {
+	a.dev = device.New(a.settings.Codie)
+	a.bq = queue.New(a.post, a.dev)
+	a.bq.Changed = a.redraw
+}
+
+// wireHymns writes the hymns' audio to the reader's data, once, and makes
+// the player that reads it.
+func (a *app) wireHymns() {
+	a.hymnDir = userDataDir("hymns")
+	a.pl = player.New(a.post)
+	a.pl.Open = func(t media.Track) (*media.Stream, error) {
+		path, ok := a.hymnFile[t.ID]
+		if !ok {
+			return nil, nil
+		}
+		ext := filepath.Ext(path)
+		if len(ext) > 1 {
+			ext = ext[1:]
+		}
+		return &media.Stream{URL: media.FileURL(path), Type: ext}, nil
+	}
+	if paths, err := hymn.Ensure(a.hymnDir); err == nil {
+		a.hymnFile = paths
+	}
+	a.pl.SetVolume(a.settings.Volume)
+}
+
 // Run starts the app: it loads the settings, opens the window, and stays
 // until it quits. Opening the app again shows the running one's window.
 func Run(bibles *bible.Registry) error {
@@ -106,6 +150,8 @@ func Run(bibles *bible.Registry) error {
 		a.settings = loadSettings()
 		a.settings.applyAppearance()
 		i18n.SetLanguage(i18n.Resolve(a.settings.Language, systemLanguages()))
+		a.wireDevice()
+		a.wireHymns()
 		a.win = mygo.NewWindow(mygo.WindowOptions{
 			Title:                mygo.App.Name(),
 			Width:                1120,

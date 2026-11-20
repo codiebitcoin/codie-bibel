@@ -34,6 +34,7 @@ func (a *app) view(c *ui.Context) {
 			})
 		})
 	})
+	a.wizardView(c)
 	if a.toast != "" {
 		c.Toast(a.toast)
 		a.toast = ""
