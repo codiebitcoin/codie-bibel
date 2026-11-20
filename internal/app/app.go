@@ -38,6 +38,7 @@ const (
 // on the main thread: by the views, and by goroutines through post.
 type app struct {
 	win      *mygo.Window
+	tray     *mygo.Tray // the icon in the menu bar or notification area
 	pal      palette
 	page     pageKind
 	settings settings
@@ -221,6 +222,7 @@ func Run(bibles *bible.Registry) error {
 		})
 		// On the Mac, closing the window hides it, and the Dock's brings
 		// it back. Elsewhere there is no tray yet, so closing quits.
+		a.applyTray()
 		a.win.OnClose(func(e *mygo.CloseEvent) {
 			if runtime.GOOS == "darwin" {
 				e.PreventDefault()

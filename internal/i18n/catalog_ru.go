@@ -111,5 +111,9 @@ var ru = map[string]string{
 	"What you confess":             "What you confess",
 	"What you write here stays on this machine; nothing of it leaves it.": "Написанное здесь остаётся на этом компьютере; ничто не покидает его.",
 	"You stood at turn": "Ты остановился на обороте",
-	"in %d days":        "in %d days",
+	"in %d days":        "in %d days", "Your highlights, notes, prayers and confessions stay on this machine; nothing of them leaves it.": "Выделения, заметки, молитвы и исповеди остаются на этом компьютере; ничто не покидает его.", "Open %s": "Открыть %s",
+	"Quit %s":        "Выйти из %s",
+	"Play/Pause":     "Воспроизведение/Пауза",
+	"days":           "дн.",
+	"No feast ahead": "Праздников впереди нет",
 }

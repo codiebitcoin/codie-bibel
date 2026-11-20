@@ -120,5 +120,9 @@ var zhHant = map[string]string{
 	"What you confess":             "What you confess",
 	"What you write here stays on this machine; nothing of it leaves it.": "你在這裡寫下的只留在這台電腦上,不會離開。",
 	"You stood at turn": "你讀到第",
-	"in %d days":        "in %d days",
+	"in %d days":        "in %d days", "Your highlights, notes, prayers and confessions stay on this machine; nothing of them leaves it.": "你的劃線、筆記、禱告和懺悔都留在這台電腦上,不會離開。", "Open %s": "打開 %s",
+	"Quit %s":        "退出 %s",
+	"Play/Pause":     "播放/暫停",
+	"days":           "天",
+	"No feast ahead": "暫無節日",
 }

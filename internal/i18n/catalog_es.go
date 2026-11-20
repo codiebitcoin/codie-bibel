@@ -111,5 +111,9 @@ var es = map[string]string{
 	"What you confess":             "What you confess",
 	"What you write here stays on this machine; nothing of it leaves it.": "Lo que escribes aquí se queda en este equipo; nada de ello sale de él.",
 	"You stood at turn": "Te quedaste en el turno",
-	"in %d days":        "in %d days",
+	"in %d days":        "in %d days", "Your highlights, notes, prayers and confessions stay on this machine; nothing of them leaves it.": "Tus resaltados, notas, oraciones y confesiones se quedan en este equipo; nada de ello sale de él.", "Open %s": "Abrir %s",
+	"Quit %s":        "Salir de %s",
+	"Play/Pause":     "Reproducir/Pausar",
+	"days":           "días",
+	"No feast ahead": "Ninguna fiesta próxima",
 }

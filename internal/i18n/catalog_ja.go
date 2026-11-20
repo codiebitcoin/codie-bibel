@@ -113,5 +113,9 @@ var ja = map[string]string{
 	"What you confess":             "What you confess",
 	"What you write here stays on this machine; nothing of it leaves it.": "ここに書いたことはこのマシンから出ません。",
 	"You stood at turn": "停止したターン",
-	"in %d days":        "in %d days",
+	"in %d days":        "in %d days", "Your highlights, notes, prayers and confessions stay on this machine; nothing of them leaves it.": "あなたのハイライト、ノート、祈り、告白はこのマシンから出ません。", "Open %s": "%sを開く",
+	"Quit %s":        "%sを終了",
+	"Play/Pause":     "再生/一時停止",
+	"days":           "日",
+	"No feast ahead": "もうすぐの祭日はありません",
 }

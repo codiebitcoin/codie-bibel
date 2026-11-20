@@ -120,5 +120,9 @@ var zhHans = map[string]string{
 	"What you confess":             "What you confess",
 	"What you write here stays on this machine; nothing of it leaves it.": "你在这里写下的只留在这台电脑上,不会离开。",
 	"You stood at turn": "你读到第",
-	"in %d days":        "in %d days",
+	"in %d days":        "in %d days", "Your highlights, notes, prayers and confessions stay on this machine; nothing of them leaves it.": "你的划线、笔记、祷告和忏悔都留在这台电脑上,不会离开。", "Open %s": "打开 %s",
+	"Quit %s":        "退出 %s",
+	"Play/Pause":     "播放/暂停",
+	"days":           "天",
+	"No feast ahead": "暂无节日",
 }

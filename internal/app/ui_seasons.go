@@ -140,7 +140,7 @@ func daysTo(from, to time.Time) int {
 // seasons package keeps by the feast's code.
 func (a *app) listenFeast(code, name string) {
 	for _, r := range seasons.FeastVerses(code) {
-		a.listenRef(r, name + ": " + r.String())
+		a.listenRef(r, name+": "+r.String())
 	}
 }
 

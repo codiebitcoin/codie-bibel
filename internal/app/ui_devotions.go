@@ -67,7 +67,7 @@ func (a *app) spurgeonCard(c *ui.Context, now time.Time) {
 		ui.Text(c, read.Text).FontSize(13.5).TextColor(a.pal.text).LineHeight(1.6)
 	}, func() {
 		// The whole reading, its text planned into turns.
-		plan := speech.NewPlan(read.Verse + ". " + read.Text, 0)
+		plan := speech.NewPlan(read.Verse+". "+read.Text, 0)
 		a.bq.Enqueue("spurgeon:"+strconv.Itoa(int(now.Month()))+"-"+strconv.Itoa(now.Day())+"-"+half, title, plan.Turns, 0)
 	})
 }

@@ -298,3 +298,9 @@ func (a *app) searchOpen() bool {
 func (a *app) openSearchResult(h bible.Hit) {
 	a.openChapter(h.Ref.Book, h.Ref.Chapter)
 }
+
+// bibleRef reads a reference as people do, for the tray's line.
+func bibleRef(code string, chapter, verse int) (string, bool) {
+	ref := bible.Ref{Book: code, Chapter: chapter, Verse: verse, EndVerse: verse}
+	return ref.String(), true
+}

@@ -113,5 +113,9 @@ var ko = map[string]string{
 	"What you confess":             "What you confess",
 	"What you write here stays on this machine; nothing of it leaves it.": "여기 쓴 것은 이 컴퓨터에만 남습니다.",
 	"You stood at turn": "멈춘 차례",
-	"in %d days":        "in %d days",
+	"in %d days":        "in %d days", "Your highlights, notes, prayers and confessions stay on this machine; nothing of them leaves it.": "형광, 노트, 기도, 고백은 이 컴퓨터에만 남습니다.", "Open %s": "%s 열기",
+	"Quit %s":        "%s 종료",
+	"Play/Pause":     "재생/일시정지",
+	"days":           "일",
+	"No feast ahead": "다가오는 절기 없음",
 }
