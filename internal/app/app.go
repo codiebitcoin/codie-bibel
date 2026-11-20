@@ -9,6 +9,7 @@ import (
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
 
+	"codie-bibel/internal/bible"
 	"codie-bibel/internal/i18n"
 )
 
@@ -33,6 +34,7 @@ type app struct {
 	pal      palette
 	page     pageKind
 	settings settings
+	bibles   *bible.Registry
 
 	navScroll  ui.ScrollState
 	pageScroll ui.ScrollState
@@ -95,11 +97,11 @@ func (a *app) open(p pageKind) {
 
 // Run starts the app: it loads the settings, opens the window, and stays
 // until it quits. Opening the app again shows the running one's window.
-func Run() error {
+func Run(bibles *bible.Registry) error {
 	if !mygo.App.RequestSingleInstanceLock() {
 		return nil
 	}
-	a := &app{}
+	a := &app{bibles: bibles}
 	mygo.App.WhenReady(func() {
 		a.settings = loadSettings()
 		a.settings.applyAppearance()
