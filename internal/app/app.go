@@ -16,6 +16,7 @@ import (
 	"codie-bibel/internal/player"
 	"codie-bibel/internal/player/media"
 	"codie-bibel/internal/queue"
+	"codie-bibel/internal/store"
 )
 
 // pageKind is one of the app's pages.
@@ -47,6 +48,10 @@ type app struct {
 	pl       *player.Player
 	hymnDir  string
 	hymnFile map[string]string
+
+	// The reader's own data, and the Read page's state.
+	store *store.Store
+	rd    *readerState
 
 	navScroll  ui.ScrollState
 	pageScroll ui.ScrollState
@@ -145,7 +150,10 @@ func (a *app) setLanguage(code string) {
 func (a *app) wireDevice() {
 	a.dev = device.New(a.settings.Codie)
 	a.bq = queue.New(a.post, a.dev)
-	a.bq.Changed = a.redraw
+	a.bq.Changed = func() {
+		a.queueProgress()
+		a.redraw()
+	}
 }
 
 // wireHymns writes the hymns' audio to the reader's data, once, and makes
@@ -183,6 +191,9 @@ func Run(bibles *bible.Registry) error {
 		a.applyLanguage()
 		a.wireDevice()
 		a.wireHymns()
+		if st, err := store.New(userDataDir("store")); err == nil {
+			a.store = st
+		}
 		a.win = mygo.NewWindow(mygo.WindowOptions{
 			Title:                mygo.App.Name(),
 			Width:                1120,

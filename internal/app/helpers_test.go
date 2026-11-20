@@ -2,11 +2,15 @@ package app
 
 import (
 	"os"
+	"path/filepath"
 	"testing"
 	"time"
 
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
+
+	"codie-bibel/internal/bible"
+	"codie-bibel/internal/store"
 )
 
 // mainThread takes what has to run on the main thread, which TestMain keeps
@@ -48,13 +52,21 @@ func TestMain(m *testing.M) {
 }
 
 // newTestApp is an app for a test to drive: no window, an unpaired
-// device, and the queue over it.
+// device, the queue over it, the shipped Bibles, and the reader's store
+// in the test's data directory.
 func newTestApp() *app {
 	a := &app{settings: defaultSettings(), page: pageRead}
 	// The posts run where they happen, so a goroutine's answer lands at
 	// once; a test that wants them collected sets posts(a).
 	a.postFn = func(fn func()) { fn() }
 	a.wireDevice()
+	a.wireHymns()
+	if bibles, err := bible.NewRegistry(os.DirFS(filepath.Join("..", "bible", "data"))); err == nil {
+		a.bibles = bibles
+	}
+	if st, err := store.New(userDataDir("store")); err == nil {
+		a.store = st
+	}
 	return a
 }
 

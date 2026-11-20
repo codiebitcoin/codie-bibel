@@ -9,11 +9,6 @@ import (
 // The pages, until each arrives: Read and its siblings grow over the next
 // milestones, each taking the place of its placeholder here.
 
-func (a *app) readPage(c *ui.Context) {
-	a.pageHeading(c, T("Read"), nil)
-	a.coming(c, T("The Bible, book by book, chapter by chapter."))
-}
-
 func (a *app) devotionsPage(c *ui.Context) {
 	a.pageHeading(c, T("Devotions"), nil)
 	a.coming(c, T("The verse of the day, Morning and Evening, and reading plans."))
