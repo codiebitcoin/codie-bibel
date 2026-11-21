@@ -59,6 +59,8 @@ func (a *app) settingsPage(c *ui.Context) {
 				a.redraw()
 			}
 		})
+		a.personaCard(c)
+		a.actionCard(c)
 		ui.Box(c).Grow(1)
 		ui.Text(c, T("Your highlights, notes, prayers and confessions stay on this machine; nothing of them leaves it.")).TextColor(a.pal.faint).FontSize(12)
 	})
