@@ -12,6 +12,7 @@ Codie Bible is a desktop app for [CODE27's codie](https://code27.com) companion 
 - **Stories** — forty of the Bible's stories, from the creation to the new creation, told aloud on the device with resume.
 - **Seasons** — the church year from Advent to Christ the King, its feasts and colors, the Revised Common Lectionary's Sunday readings, and feast alarms on the device.
 - **Music** — eight public-domain hymns and chorales (Bach, the Sacred Harp, the US service bands' carols) playing quietly in the background.
+- **A default figure of its own** — both personas wear the app's bundled VRM (pixiv's MIT-licensed sample humanoid); upload a model or clone a voice to replace them.
 - **Eleven languages** — the interface speaks what the Bibles read: English, 简体中文, 繁體中文, Deutsch, Español, Français, Português, Русский, 日本語, 한국어, العربية (laid out from the right).
 
 Pairing walks four steps — the address, the six-figure code, the character, a verse read aloud. The device plays its own motions as it speaks; the app sets how strong they read, and may give a character a model and a cloned voice of the reader's own.
@@ -22,6 +23,7 @@ Pairing walks four steps — the address, the six-figure code, the character, a 
 - The hymns: Wikimedia Commons recordings, all public domain except Bach BWV 147 (CC0) and BWV 140 (CC BY-SA 2.0, MIT Concert Choir) — see [internal/hymn](internal/hymn).
 - Spurgeon's *Morning and Evening* (1866): public domain; transcription via the dwahrens/morning-and-evening data file (Apache-2.0 covers the packaging, not the text).
 - The lectionary table: from [marmanold/Date-Lectionary](https://github.com/marmanold/Date-Lectionary) (BSD-2-Clause); the readings themselves are scripture references.
+- The default figure: pixiv's [three-vrm](https://github.com/pixiv/three-vrm) sample humanoid (MIT).
 
 ## Building
 

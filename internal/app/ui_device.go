@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/egoist/mygo"
-
 	"github.com/egoist/mygo/ui"
 
+	"codie-bibel/internal/assets"
 	"codie-bibel/internal/device"
 )
 
@@ -84,12 +84,12 @@ func (a *app) personaCard(c *ui.Context) {
 			}
 			ui.Text(c, p.Summary).TextColor(a.pal.muted).FontSize(12.5).MaxWidth(520)
 			// The face and the voice, as they stand.
-			face := T("The device's own face.")
-			if a.seedVRM(p) != nil {
+			face := T("Wearing the app's default figure; upload a model to replace it.")
+			if a.seedVRMPersonal(p) != nil {
 				face = Tf("Wearing the model file %s.", p.VRM)
 			}
 			ui.Text(c, face).TextColor(a.pal.faint).FontSize(12)
-			voice := T("The device's own voice.")
+			voice := T("The device's own voice; upload a sample to clone the reader's.")
 			if a.settings.CodieVoice[p.Code] != "" {
 				voice = T("A voice of the reader's cloning.")
 			}
@@ -109,8 +109,8 @@ func (a *app) personaCard(c *ui.Context) {
 				}
 			})
 			// Where a model file the reader downloads goes.
-			if p.VRM != "" && a.seedVRM(p) == nil {
-				ui.Text(c, Tf("No model yet. Download one — as hub.vroid.com's Jesus models — and put it at %s", filepath.Join(userDataDir(""), p.VRM))).TextColor(a.pal.faint).FontSize(11.5)
+			if p.VRM != "" && a.seedVRMPersonal(p) == nil {
+				ui.Text(c, Tf("Your own model goes at %s", filepath.Join(userDataDir(""), p.VRM))).TextColor(a.pal.faint).FontSize(11.5)
 			}
 			if a.dev == nil || !a.dev.Paired() {
 				ui.Text(c, T("Cloning a voice needs the paired device; pair one and come back to it.")).TextColor(a.pal.faint).FontSize(11.5)
@@ -265,10 +265,9 @@ func (a *app) applyPersona(p *device.Persona, vrmOverride []byte) {
 	}()
 }
 
-// seedVRM reads the persona's model file from the reader's data, where
-// they may have put one, or reads nothing: the device's own model speaks
-// then.
-func (a *app) seedVRM(p *device.Persona) []byte {
+// seedVRMPersonal reads the reader's own model file for a persona, or
+// nil when they haven't given one.
+func (a *app) seedVRMPersonal(p *device.Persona) []byte {
 	if p.VRM == "" {
 		return nil
 	}
@@ -277,6 +276,16 @@ func (a *app) seedVRM(p *device.Persona) []byte {
 		return nil
 	}
 	return b
+}
+
+// seedVRM reads the persona's model: the reader's own file where they
+// gave one, else the app's default figure, which every persona wears
+// until replaced.
+func (a *app) seedVRM(p *device.Persona) []byte {
+	if b := a.seedVRMPersonal(p); b != nil {
+		return b
+	}
+	return assets.DefaultFigure
 }
 
 // personaIntensity is the strength of the character's motions, as the

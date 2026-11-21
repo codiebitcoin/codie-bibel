@@ -124,5 +124,8 @@ var ru = map[string]string{
 	"Sunday, %s": "Воскресенье, %s",
 	"The port is 8081 unless the device says otherwise.": "Порт — 8081, если устройство не говорит иного.",
 	"Verse by verse": "Стих за стихом",
-	"You can still choose the character and give it a model and a voice now; the pairing sends them over.": "Персонаж, модель и голос можно выбрать и сейчас; сопряжение отправит их.", "1 day to %s": "1 день до %s",
+	"You can still choose the character and give it a model and a voice now; the pairing sends them over.": "Персонаж, модель и голос можно выбрать и сейчас; сопряжение отправит их.", "1 day to %s": "1 день до %s", "%s wears the app's default figure; put your own model at %s to replace it.": "%s носит стандартную фигуру приложения; свою модель положи в %s.",
+	"The device's own voice; upload a sample to clone the reader's.": "Собственный голос устройства; загрузи образец, чтобы клонировать.",
+	"Your own model goes at %s":                                      "Твоя модель кладётся в %s", "%s wears your model file %s.": "%s носит твой файл модели %s.",
+	"Wearing the app's default figure; upload a model to replace it.": "Носит стандартную фигуру приложения; загрузи модель, чтобы заменить.",
 }

@@ -111,8 +111,12 @@ func (a *app) wizardCharacter(c *ui.Context) {
 		}
 		ui.Text(c, p.Summary).TextColor(a.pal.muted).FontSize(12.5).MaxWidth(480)
 	}
-	if seed := device.PersonaByCode(chosen); seed != nil && a.seedVRM(seed) == nil {
-		ui.Text(c, Tf("No model file for %s is in the app's data folder, so the device speaks with its own face. Put %s there to change that.", seed.Name, seed.VRM)).TextColor(a.pal.faint).FontSize(12)
+	if seed := device.PersonaByCode(chosen); seed != nil {
+		if a.seedVRMPersonal(seed) != nil {
+			ui.Text(c, Tf("%s wears your model file %s.", seed.Name, seed.VRM)).TextColor(a.pal.faint).FontSize(12)
+		} else {
+			ui.Text(c, Tf("%s wears the app's default figure; put your own model at %s to replace it.", seed.Name, seed.VRM)).TextColor(a.pal.faint).FontSize(12)
+		}
 	}
 }
 

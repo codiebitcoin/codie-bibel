@@ -124,5 +124,8 @@ var es = map[string]string{
 	"Sunday, %s": "Domingo, %s",
 	"The port is 8081 unless the device says otherwise.": "El puerto es 8081, salvo que el dispositivo indique otro.",
 	"Verse by verse": "Versículo a versículo",
-	"You can still choose the character and give it a model and a voice now; the pairing sends them over.": "Ya puedes elegir el personaje y darle un modelo y una voz; el emparejamiento los envía.", "1 day to %s": "1 día para %s",
+	"You can still choose the character and give it a model and a voice now; the pairing sends them over.": "Ya puedes elegir el personaje y darle un modelo y una voz; el emparejamiento los envía.", "1 day to %s": "1 día para %s", "%s wears the app's default figure; put your own model at %s to replace it.": "%s viste la figura predeterminada de la app; pon un modelo propio en %s.",
+	"The device's own voice; upload a sample to clone the reader's.": "La voz propia del dispositivo; sube una muestra para clonarla.",
+	"Your own model goes at %s":                                      "Tu modelo va en %s", "%s wears your model file %s.": "%s viste tu archivo de modelo %s.",
+	"Wearing the app's default figure; upload a model to replace it.": "Viste la figura predeterminada de la app; sube un modelo para cambiarla.",
 }

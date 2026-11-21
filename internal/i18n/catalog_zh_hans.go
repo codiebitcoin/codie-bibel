@@ -133,5 +133,8 @@ var zhHans = map[string]string{
 	"Sunday, %s": "周日 %s",
 	"The port is 8081 unless the device says otherwise.": "端口是 8081,除非设备另有说明。",
 	"Verse by verse": "逐节排版",
-	"You can still choose the character and give it a model and a voice now; the pairing sends them over.": "现在就可以选好形象、放好模型和声音;配对后会自动发过去。", "1 day to %s": "距 %s 还有 1 天",
+	"You can still choose the character and give it a model and a voice now; the pairing sends them over.": "现在就可以选好形象、放好模型和声音;配对后会自动发过去。", "1 day to %s": "距 %s 还有 1 天", "%s wears the app's default figure; put your own model at %s to replace it.": "%s 穿着应用自带的默认形象;把自己的模型放到 %s 即可替换。",
+	"The device's own voice; upload a sample to clone the reader's.": "设备自带的声音;上传样本即可克隆成你的。",
+	"Your own model goes at %s":                                      "你的模型放到 %s", "%s wears your model file %s.": "%s 穿着你放的模型文件 %s。",
+	"Wearing the app's default figure; upload a model to replace it.": "穿着应用自带的默认形象;上传模型即可替换。",
 }

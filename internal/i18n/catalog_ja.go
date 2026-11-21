@@ -126,5 +126,8 @@ var ja = map[string]string{
 	"Sunday, %s": "日曜日 %s",
 	"The port is 8081 unless the device says otherwise.": "ポートは8081です(デバイスが別の値を表示していない場合)。",
 	"Verse by verse": "一節ずつ",
-	"You can still choose the character and give it a model and a voice now; the pairing sends them over.": "今のところでもキャラクターを選び、モデルと声を用意できます。ペアリングで送られます。", "1 day to %s": "%sまであと1日",
+	"You can still choose the character and give it a model and a voice now; the pairing sends them over.": "今のところでもキャラクターを選び、モデルと声を用意できます。ペアリングで送られます。", "1 day to %s": "%sまであと1日", "%s wears the app's default figure; put your own model at %s to replace it.": "%s はアプリ標準のフィギュアを着ています。自分のモデルは %s に置いてください。",
+	"The device's own voice; upload a sample to clone the reader's.": "デバイス本体の声。サンプルをアップロードするとクローンできます。",
+	"Your own model goes at %s":                                      "自分のモデルは %s に置きます", "%s wears your model file %s.": "%s はあなたのモデルファイル %s を着ています。",
+	"Wearing the app's default figure; upload a model to replace it.": "アプリ標準のフィギュアを着ています。モデルをアップロードして変更できます。",
 }

@@ -126,5 +126,8 @@ var ko = map[string]string{
 	"Sunday, %s": "일요일 %s",
 	"The port is 8081 unless the device says otherwise.": "포트는 기기가 다르게 표시하지 않는 한 8081입니다.",
 	"Verse by verse": "절씩",
-	"You can still choose the character and give it a model and a voice now; the pairing sends them over.": "지금도 캐릭터를 고르고 모델과 목소리를 준비할 수 있습니다. 페어링하면 전송됩니다.", "1 day to %s": "%s까지 1일",
+	"You can still choose the character and give it a model and a voice now; the pairing sends them over.": "지금도 캐릭터를 고르고 모델과 목소리를 준비할 수 있습니다. 페어링하면 전송됩니다.", "1 day to %s": "%s까지 1일", "%s wears the app's default figure; put your own model at %s to replace it.": "%s 은 앱 기본 피규어를 입고 있습니다. 바꾸려면 %s 에 넣으세요.",
+	"The device's own voice; upload a sample to clone the reader's.": "기기 자체 목소리. 샘플을 올리면 복제됩니다.",
+	"Your own model goes at %s":                                      "자신의 모델은 %s 에 넣습니다", "%s wears your model file %s.": "%s 은 당신의 모델 파일 %s 을 입고 있습니다.",
+	"Wearing the app's default figure; upload a model to replace it.": "Wearing the app's default figure; upload a model to replace it.",
 }
