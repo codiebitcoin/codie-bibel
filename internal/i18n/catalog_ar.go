@@ -127,7 +127,9 @@ var ar = map[string]string{
 	"You can still choose the character and give it a model and a voice now; the pairing sends them over.": "يمكنك الآن اختيار الشخصية وإعطائها نموذجاً وصوتاً؛ الاقتران يرسلها.", "1 day to %s": "يوم واحد حتى %s", "%s wears the app's default figure; put your own model at %s to replace it.": "%s يرتدي الشكل الافتراضي للتطبيق؛ ضع نموذجك الخاص في %s لاستبداله.",
 	"The device's own voice; upload a sample to clone the reader's.": "صوت الجهاز نفسه؛ ارفع عينة لاستنساخه.",
 	"Your own model goes at %s":                                      "نموذجك يوضع في %s", "%s wears your model file %s.": "%s يرتدي ملف النموذج %s.",
-	"Wearing the app's default figure; upload a model to replace it.":             "يرتدي الشكل الافتراضي للتطبيق؛ ارفع نموذجاً لاستبداله.",
-	"Wearing the app's figure of Jesus; upload a model to replace it.":            "يرتدي شكل يسوع من التطبيق؛ ارفع نموذجاً لاستبداله.",
-	"%s wears the app's figure of Jesus; put your own model at %s to replace it.": "%s يرتدي شكل يسوع من التطبيق؛ ضع نموذجك الخاص في %s لاستبداله.",
+	"Wearing the app's default figure; upload a model to replace it.":                "يرتدي الشكل الافتراضي للتطبيق؛ ارفع نموذجاً لاستبداله.",
+	"Wearing the app's figure of Jesus; upload a model to replace it.":               "يرتدي شكل يسوع من التطبيق؛ ارفع نموذجاً لاستبداله.",
+	"Wearing the app's figure of the monk; upload a model to replace it.":            "يرتدي شكل الراهب من التطبيق؛ ارفع نموذجاً لاستبداله.",
+	"%s wears the app's figure of the monk; put your own model at %s to replace it.": "%s يرتدي شكل الراهب من التطبيق؛ ضع نموذجك الخاص في %s لاستبداله.",
+	"%s wears the app's figure of Jesus; put your own model at %s to replace it.":    "%s يرتدي شكل يسوع من التطبيق؛ ضع نموذجك الخاص في %s لاستبداله.",
 }

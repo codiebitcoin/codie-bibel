@@ -12,7 +12,7 @@ Codie Bible is a desktop app for [CODE27's codie](https://code27.com) companion 
 - **Stories** — forty of the Bible's stories, from the creation to the new creation, told aloud on the device with resume.
 - **Seasons** — the church year from Advent to Christ the King, its feasts and colors, the Revised Common Lectionary's Sunday readings, and feast alarms on the device.
 - **Music** — eight public-domain hymns and chorales (Bach, the Sacred Harp, the US service bands' carols) playing quietly in the background.
-- **A figure and a voice of its own** — Jesus wears the app's own figure of him (a VRM brought from VRoid Hub), and at the first pairing the app quietly clones his voice from a blessing it ships; the monk wears pixiv's MIT-licensed sample humanoid. Upload a model or clone a voice to replace either.
+- **Figures and a voice of its own** — Jesus wears the app's own figure of him and the monk a vested cleric (VRMs brought from VRoid Hub), and at the first pairing the app quietly clones Jesus's voice from a blessing it ships. Upload a model or clone a voice to replace either.
 - **Eleven languages** — the interface speaks what the Bibles read: English, 简体中文, 繁體中文, Deutsch, Español, Français, Português, Русский, 日本語, 한국어, العربية (laid out from the right).
 
 Pairing walks four steps — the address, the six-figure code, the character, a verse read aloud. The device plays its own motions as it speaks; the app sets how strong they read, and may give a character a model and a cloned voice of the reader's own.
@@ -25,7 +25,7 @@ Pairing walks four steps — the address, the six-figure code, the character, a 
 - The lectionary table: from [marmanold/Date-Lectionary](https://github.com/marmanold/Date-Lectionary) (BSD-2-Clause); the readings themselves are scripture references.
 - The figure of Jesus: a VRM titled "Jesus" from [VRoid Hub](https://hub.vroid.com) (model 307680147834872455), used by the terms the model carries there.
 - The seed of Jesus's voice: a synthesized blessing (KJV words, a system voice); it is cloned on the reader's own device, never shipped as audio of a real person.
-- The monk's default figure: pixiv's [three-vrm](https://github.com/pixiv/three-vrm) sample humanoid (MIT).
+- The monk's default figure: a vested cleric from [VRoid Hub](https://hub.vroid.com) (model 8631357567214777894, "アバター_神父服モデル" by ALL・nee・t), bundled by CODE27's decision — the model's terms there restrict its use; give the monk a model of your own where they would not suit yours. The pixiv [three-vrm](https://github.com/pixiv/three-vrm) sample humanoid (MIT) remains the fallback figure.
 
 ## Building
 

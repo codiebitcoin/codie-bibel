@@ -127,7 +127,9 @@ var ru = map[string]string{
 	"You can still choose the character and give it a model and a voice now; the pairing sends them over.": "Персонаж, модель и голос можно выбрать и сейчас; сопряжение отправит их.", "1 day to %s": "1 день до %s", "%s wears the app's default figure; put your own model at %s to replace it.": "%s носит стандартную фигуру приложения; свою модель положи в %s.",
 	"The device's own voice; upload a sample to clone the reader's.": "Собственный голос устройства; загрузи образец, чтобы клонировать.",
 	"Your own model goes at %s":                                      "Твоя модель кладётся в %s", "%s wears your model file %s.": "%s носит твой файл модели %s.",
-	"Wearing the app's default figure; upload a model to replace it.":             "Носит стандартную фигуру приложения; загрузи модель, чтобы заменить.",
-	"Wearing the app's figure of Jesus; upload a model to replace it.":            "Носит фигуру Иисуса из приложения; загрузи модель, чтобы заменить.",
-	"%s wears the app's figure of Jesus; put your own model at %s to replace it.": "%s носит фигуру Иисуса из приложения; свою модель положи в %s.",
+	"Wearing the app's default figure; upload a model to replace it.":                "Носит стандартную фигуру приложения; загрузи модель, чтобы заменить.",
+	"Wearing the app's figure of Jesus; upload a model to replace it.":               "Носит фигуру Иисуса из приложения; загрузи модель, чтобы заменить.",
+	"Wearing the app's figure of the monk; upload a model to replace it.":            "Носит фигуру монаха из приложения; загрузи модель, чтобы заменить.",
+	"%s wears the app's figure of the monk; put your own model at %s to replace it.": "%s носит фигуру монаха из приложения; свою модель положи в %s.",
+	"%s wears the app's figure of Jesus; put your own model at %s to replace it.":    "%s носит фигуру Иисуса из приложения; свою модель положи в %s.",
 }

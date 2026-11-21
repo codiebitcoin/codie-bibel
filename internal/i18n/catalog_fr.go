@@ -127,7 +127,9 @@ var fr = map[string]string{
 	"You can still choose the character and give it a model and a voice now; the pairing sends them over.": "Tu peux déjà choisir le personnage et lui donner un modèle et une voix ; l'appairage les envoie.", "1 day to %s": "1 jour avant %s", "%s wears the app's default figure; put your own model at %s to replace it.": "%s porte la figurine par défaut de l'app ; mets ton propre modèle à %s.",
 	"The device's own voice; upload a sample to clone the reader's.": "La voix propre de l'appareil ; téléverse un échantillon pour la cloner.",
 	"Your own model goes at %s":                                      "Ton modèle va à %s", "%s wears your model file %s.": "%s porte ton fichier de modèle %s.",
-	"Wearing the app's default figure; upload a model to replace it.":             "Porte la figurine par défaut de l'app ; téléverse un modèle pour la remplacer.",
-	"Wearing the app's figure of Jesus; upload a model to replace it.":            "Porte la figurine de Jésus de l'app ; téléverse un modèle pour la remplacer.",
-	"%s wears the app's figure of Jesus; put your own model at %s to replace it.": "%s porte la figurine de Jésus de l'app ; mets ton propre modèle à %s.",
+	"Wearing the app's default figure; upload a model to replace it.":                "Porte la figurine par défaut de l'app ; téléverse un modèle pour la remplacer.",
+	"Wearing the app's figure of Jesus; upload a model to replace it.":               "Porte la figurine de Jésus de l'app ; téléverse un modèle pour la remplacer.",
+	"Wearing the app's figure of the monk; upload a model to replace it.":            "Porte la figurine du moine de l'app ; téléverse un modèle pour la remplacer.",
+	"%s wears the app's figure of the monk; put your own model at %s to replace it.": "%s porte la figurine du moine de l'app ; mets ton propre modèle à %s.",
+	"%s wears the app's figure of Jesus; put your own model at %s to replace it.":    "%s porte la figurine de Jésus de l'app ; mets ton propre modèle à %s.",
 }

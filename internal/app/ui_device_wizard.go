@@ -118,10 +118,15 @@ func (a *app) wizardCharacter(c *ui.Context) {
 	if seed := device.PersonaByCode(chosen); seed != nil {
 		if a.seedVRMPersonal(seed) != nil {
 			ui.Text(c, Tf("%s wears your model file %s.", seed.Name, seed.VRM)).TextColor(a.pal.faint).FontSize(12)
-		} else if seed.Code == "jesus" {
-			ui.Text(c, Tf("%s wears the app's figure of Jesus; put your own model at %s to replace it.", seed.Name, seed.VRM)).TextColor(a.pal.faint).FontSize(12)
 		} else {
-			ui.Text(c, Tf("%s wears the app's default figure; put your own model at %s to replace it.", seed.Name, seed.VRM)).TextColor(a.pal.faint).FontSize(12)
+			switch seed.Code {
+			case "jesus":
+				ui.Text(c, Tf("%s wears the app's figure of Jesus; put your own model at %s to replace it.", seed.Name, seed.VRM)).TextColor(a.pal.faint).FontSize(12)
+			case "monk":
+				ui.Text(c, Tf("%s wears the app's figure of the monk; put your own model at %s to replace it.", seed.Name, seed.VRM)).TextColor(a.pal.faint).FontSize(12)
+			default:
+				ui.Text(c, Tf("%s wears the app's default figure; put your own model at %s to replace it.", seed.Name, seed.VRM)).TextColor(a.pal.faint).FontSize(12)
+			}
 		}
 	}
 }

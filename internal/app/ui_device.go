@@ -123,8 +123,11 @@ func (a *app) personaCard(c *ui.Context) {
 // summary: which model file it wears, and which voice speaks.
 func (a *app) personaModelVoiceLines(c *ui.Context, p *device.Persona) {
 	face := T("Wearing the app's default figure; upload a model to replace it.")
-	if p.Code == "jesus" {
+	switch p.Code {
+	case "jesus":
 		face = T("Wearing the app's figure of Jesus; upload a model to replace it.")
+	case "monk":
+		face = T("Wearing the app's figure of the monk; upload a model to replace it.")
 	}
 	if a.seedVRMPersonal(p) != nil {
 		face = Tf("Wearing the model file %s.", p.VRM)
@@ -140,20 +143,20 @@ func (a *app) personaModelVoiceLines(c *ui.Context, p *device.Persona) {
 // personaPreview is the figure the persona wears, as a picture: rendered
 // once from the very models the app ships, and decoded once.
 var personaPreviews = struct {
-	once     sync.Once
-	jesus    ui.ImageSource
-	fallback ui.ImageSource
+	once  sync.Once
+	jesus ui.ImageSource
+	monk  ui.ImageSource
 }{}
 
 func personaPreview(code string) ui.ImageSource {
 	personaPreviews.once.Do(func() {
 		personaPreviews.jesus, _ = ui.DecodeImage(assets.JesusPreview)
-		personaPreviews.fallback, _ = ui.DecodeImage(assets.DefaultPreview)
+		personaPreviews.monk, _ = ui.DecodeImage(assets.MonkPreview)
 	})
 	if code == "jesus" {
 		return personaPreviews.jesus
 	}
-	return personaPreviews.fallback
+	return personaPreviews.monk
 }
 
 // uploadModel asks for a VRM file, keeps it as the persona's model, and
@@ -357,13 +360,16 @@ func (a *app) seedVRMPersonal(p *device.Persona) []byte {
 
 // seedVRM reads the persona's model: the reader's own file where they
 // gave one, else the figure the app bundles for them — Jesus his own,
-// the others the app's default figure.
+// the monk his vested cleric.
 func (a *app) seedVRM(p *device.Persona) []byte {
 	if b := a.seedVRMPersonal(p); b != nil {
 		return b
 	}
-	if p.Code == "jesus" {
+	switch p.Code {
+	case "jesus":
 		return assets.JesusFigure
+	case "monk":
+		return assets.MonkFigure
 	}
 	return assets.DefaultFigure
 }

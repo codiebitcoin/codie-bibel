@@ -12,7 +12,7 @@ Codie Bible 是 [CODE27 codie](https://code27.com) 伴读设备的桌面应用,�
 - **故事** —— 圣经的四十个故事,从创世到新天新地,由设备讲给你听,支持断点续读。
 - **节期** —— 从将临期到基督君王节的教会年历、节期与礼仪颜色、经课表的主日经课,并可将节日提醒推到设备。
 - **音乐** —— 八首公有领域赞美诗与圣咏(巴赫、Sacred Harp、美军军乐队的圣诞颂歌)轻声背景播放。
-- **自带形象与声音** —— 耶稣穿着应用自带的耶稣 VRM(取自 VRoid Hub),首次配对时应用会用内置的一段祝福语自动克隆他的声音;修士穿着 pixiv MIT 示例人形。都可上传模型或克隆声音替换。
+- **自带形象与声音** —— 耶稣与修士各穿着应用自带的 VRM(均取自 VRoid Hub),首次配对时应用会用内置的一段祝福语自动克隆耶稣的声音。都可上传模型或克隆声音替换。
 - **十一种界面语言** —— 界面语言与内置圣经语言一致:English、简体中文、繁體中文、Deutsch、Español、Français、Português、Русский、日本語、한국어、العربية(从右向左排版)。
 
 配对向导四步:地址 → 六位配对码 → 选择形象 → 试读一节。设备说话时会自带动作;应用可设定动作幅度,也可为形象上传模型与克隆声音。
@@ -25,7 +25,7 @@ Codie Bible 是 [CODE27 codie](https://code27.com) 伴读设备的桌面应用,�
 - 经课表:取自 [marmanold/Date-Lectionary](https://github.com/marmanold/Date-Lectionary)(BSD-2-Clause);经课本身只是圣经引用。
 - 耶稣形象:VRoid Hub 上名为 "Jesus" 的 VRM 模型(model 307680147834872455),按该模型在 VRoid Hub 携带的条款使用。
 - 耶稣声音的种子:一段合成的祝福语(英文 KJV 经文 + 系统语音);它只在读者自己的设备上克隆,不含任何真人的声音。
-- 修士默认形象:pixiv [three-vrm](https://github.com/pixiv/three-vrm) 示例人形(MIT)。
+- 修士默认形象:VRoid Hub 上的神父服模型(model 8631357567214777894,"アバター_神父服モデル",作者 ALL・nee・t),由 CODE27 决定打包——该模型在 VRoid Hub 的条款限制其使用,不合适时请上传你自己的模型。pixiv [three-vrm](https://github.com/pixiv/three-vrm) 示例人形(MIT)仍作为兜底形象。
 
 ## 构建
 

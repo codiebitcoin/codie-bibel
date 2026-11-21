@@ -136,7 +136,9 @@ var zhHant = map[string]string{
 	"You can still choose the character and give it a model and a voice now; the pairing sends them over.": "現在就可以選好形象、放好模型和聲音;配對後會自動發過去。", "1 day to %s": "距 %s 還有 1 天", "%s wears the app's default figure; put your own model at %s to replace it.": "%s 穿著應用自帶的預設形象;把自己的模型放到 %s 即可替換。",
 	"The device's own voice; upload a sample to clone the reader's.": "設備自帶的聲音;上傳樣本即可克隆成你的。",
 	"Your own model goes at %s":                                      "你的模型放到 %s", "%s wears your model file %s.": "%s 穿著你放的模型檔案 %s。",
-	"Wearing the app's default figure; upload a model to replace it.":             "穿著應用自帶的預設形象;上傳模型即可替換。",
-	"Wearing the app's figure of Jesus; upload a model to replace it.":            "穿著應用自帶的耶穌形象;上傳模型即可替換。",
-	"%s wears the app's figure of Jesus; put your own model at %s to replace it.": "%s 穿著應用自帶的耶穌形象;把自己的模型放到 %s 即可替換.",
+	"Wearing the app's default figure; upload a model to replace it.":                "穿著應用自帶的預設形象;上傳模型即可替換。",
+	"Wearing the app's figure of Jesus; upload a model to replace it.":               "穿著應用自帶的耶穌形象;上傳模型即可替換。",
+	"Wearing the app's figure of the monk; upload a model to replace it.":            "穿著應用自帶的修士形象;上傳模型即可替換。",
+	"%s wears the app's figure of the monk; put your own model at %s to replace it.": "%s 穿著應用自帶的修士形象;把自己的模型放到 %s 即可替換。",
+	"%s wears the app's figure of Jesus; put your own model at %s to replace it.":    "%s 穿著應用自帶的耶穌形象;把自己的模型放到 %s 即可替換.",
 }
