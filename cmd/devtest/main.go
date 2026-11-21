@@ -12,6 +12,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"path/filepath"
 	"time"
 
 	"codie-bibel/internal/device"
@@ -21,6 +22,7 @@ func main() {
 	credsPath := flag.String("creds", "", "path to the codie.json of a paired app")
 	speak := flag.Bool("speak", false, "read one verse aloud")
 	noPersona := flag.Bool("no-persona", false, "skip the persona apply")
+	clone := flag.String("clone", "", "an audio sample to clone as the character's voice")
 	flag.Parse()
 	if *credsPath == "" {
 		fmt.Println("-creds is required")
@@ -103,6 +105,23 @@ func main() {
 		}
 		fmt.Println("PASS chat: the character answered")
 		time.Sleep(3 * time.Second)
+	}
+
+	// 5. the reader's voice, cloned on the device
+	if *clone != "" {
+		audio, err := os.ReadFile(*clone)
+		if err != nil {
+			fmt.Println("read sample:", err)
+			os.Exit(1)
+		}
+		ctx2, cancel2 := context.WithTimeout(context.Background(), 25*time.Minute)
+		defer cancel2()
+		voiceID, err := d.CloneVoice(ctx2, audio, filepath.Base(*clone), "Codie Bible")
+		if err != nil {
+			fmt.Println("FAIL clone:", err)
+			os.Exit(1)
+		}
+		fmt.Println("PASS clone: voice", voiceID, "is on the device")
 	}
 
 	fmt.Println("ALL PASS")
