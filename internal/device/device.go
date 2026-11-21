@@ -2,9 +2,11 @@ package device
 
 import (
 	"context"
+	"crypto/rand"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	clt01 "workshop_inner_sdk"
@@ -183,8 +185,12 @@ func (d *Device) Speak(ctx context.Context, text string) error {
 	if !ok {
 		return fmt.Errorf("the device didn't say it was done reading")
 	}
-	if done != "played" && done != "done" {
-		return fmt.Errorf("the device stopped reading: %s", done)
+	// Done reads as any state that isn't a failure: the firmware says
+	// "completed" here and "done" elsewhere.
+	for _, bad := range []string{"fail", "cancel", "error"} {
+		if strings.Contains(strings.ToLower(done), bad) {
+			return fmt.Errorf("the device stopped reading: %s", done)
+		}
 	}
 	d.utterance = ""
 	return nil
@@ -283,6 +289,11 @@ func (d *Device) SetAlarm(ctx context.Context, label string, at time.Time) error
 // errNotPaired is what the device answers while there is none.
 var errNotPaired = errors.New("no device is paired")
 
+// requestID is a v4 UUID, what the device requires of every request.
 func requestID() string {
-	return fmt.Sprintf("codie-bibel-%d", time.Now().UnixNano())
+	var b [16]byte
+	rand.Read(b[:])
+	b[6] = (b[6] & 0x0f) | 0x40
+	b[8] = (b[8] & 0x3f) | 0x80
+	return fmt.Sprintf("%x-%x-%x-%x-%x", b[0:4], b[4:6], b[6:8], b[8:10], b[10:16])
 }
