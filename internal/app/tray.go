@@ -56,7 +56,7 @@ func (a *app) trayMenu() *mygo.Menu {
 	verse, _ := bibleRef(code, ch, vs)
 	_, feast, _, days := seasons.Today(time.Now())
 	feastLine := T("No feast ahead")
-	if feast.Code != "" {
+	if feast != nil {
 		feastLine = feast.Name + " — " + strconv.Itoa(days) + " " + T("days")
 	}
 	name := mygo.App.Name()
