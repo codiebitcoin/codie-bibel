@@ -75,6 +75,11 @@ type app struct {
 
 	wizard wizardState // the pairing guide, until it's done
 
+	// The paired device's reachability, as the settings' Codie section
+	// shows it: asked once on entering, then by the Test button.
+	codieStatusAsked bool
+	codieStatus      string
+
 	toast string
 
 	// postFn, if set, takes what post would run on the main thread, as in
@@ -204,6 +209,43 @@ func (a *app) wireDevice() {
 
 // wireHymns writes the hymns' audio to the reader's data, once, and makes
 // the player that reads it.
+// startWizard shows the pairing guide again, as the settings' setup row
+// does.
+func (a *app) startWizard() {
+	a.wizard = wizardState{open: true}
+	a.redraw()
+}
+
+// forgetDevice unpairs: the credentials go, the device and the queue are
+// rewired of none, and the guide walks the next pairing in.
+func (a *app) forgetDevice() {
+	a.settings.Codie = nil
+	a.settings.save()
+	a.wireDevice()
+	a.redraw()
+}
+
+// probeDeviceStatus asks the paired device how it is — always off the
+// main thread — and says it in the cached status the settings show.
+func (a *app) probeDeviceStatus() {
+	if a.dev == nil || !a.dev.Paired() {
+		return
+	}
+	go func() {
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+		err := a.dev.Status(ctx)
+		a.post(func() {
+			if err == nil {
+				a.codieStatus = T("Reachable")
+			} else {
+				a.codieStatus = T("Unreachable")
+			}
+			a.redraw()
+		})
+	}()
+}
+
 func (a *app) wireHymns() {
 	a.hymnDir = userDataDir("hymns")
 	a.pl = player.New(a.post)
@@ -235,6 +277,11 @@ func Run(bibles *bible.Registry) error {
 		a.settings = loadSettings()
 		a.settings.applyAppearance()
 		a.applyLanguage()
+		// The pairing guide walks a first-time reader in by itself, as the
+		// music player's does.
+		if !a.settings.CodieSetupDone {
+			a.wizard.open = true
+		}
 		a.wireDevice()
 		a.wireHymns()
 		if st, err := store.New(userDataDir("store")); err == nil {

@@ -59,6 +59,38 @@ func (a *app) settingsPage(c *ui.Context) {
 				a.redraw()
 			}
 		})
+		// The Codie section, as the music player's settings keep it: the
+		// paired device with its reachability, and the guide to walk
+		// again.
+		if paired := a.dev != nil && a.dev.Paired(); paired {
+			if !a.codieStatusAsked {
+				a.codieStatusAsked = true
+				a.probeDeviceStatus()
+			}
+			status := a.codieStatus
+			if status == "" {
+				status = T("Checking…")
+			}
+			ui.Text(c, T("Paired device")).FontSize(12).FontWeight(600).TextColor(a.pal.muted)
+			ui.Row(c).Gap(8).AlignItems(ui.Center).Children(func() {
+				ui.Text(c, status).FontSize(12.5).TextColor(a.pal.muted)
+				ui.Box(c).Grow(1)
+				if ui.Button(c.Key("codie-test"), T("Test")).Clicked() {
+					a.probeDeviceStatus()
+				}
+				if ui.Button(c.Key("codie-forget"), T("Forget device")).Clicked() {
+					a.forgetDevice()
+				}
+			})
+		}
+		ui.Text(c, T("Setup guide")).FontSize(12).FontWeight(600).TextColor(a.pal.muted)
+		ui.Row(c).Gap(8).AlignItems(ui.Center).Children(func() {
+			ui.Text(c, T("Walk it again: pair the device, choose the character, hear a verse.")).TextColor(a.pal.muted).FontSize(12.5)
+			ui.Box(c).Grow(1)
+			if ui.Button(c.Key("codie-wizard-again"), T("Run again")).Clicked() {
+				a.startWizard()
+			}
+		})
 		a.personaCard(c)
 		a.actionCard(c)
 		ui.Box(c).Grow(1)
