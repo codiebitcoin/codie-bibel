@@ -1,5 +1,7 @@
 # Codie Bible
 
+![Codie Bible](docs/banner.png)
+
 **Make your Codie as Bibel** —— 配对你的 codie 设备,让它朗读圣经:故事、诗篇、每日金句。它以耶稣的形象说话,也可换成修士,适合安静的场合。
 
 Codie Bible 是 [CODE27 codie](https://code27.com) 伴读设备的桌面应用,用 [egoist/mygo](https://github.com/egoist/mygo) 构建 —— 纯 Go、无 cgo,原生窗口覆盖 macOS / Windows / Linux。

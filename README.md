@@ -1,5 +1,7 @@
 # Codie Bible
 
+![Codie Bible](docs/banner.png)
+
 **Make your Codie as Bibel** — pair your codie device, and it reads the Bible aloud: the stories, the psalms, the verses of the day. It speaks as Jesus, or as a monk for the quieter rooms.
 
 Codie Bible is a desktop app for [CODE27's codie](https://code27.com) companion device, built with [egoist/mygo](https://github.com/egoist/mygo) — pure Go, no cgo, native windows on macOS, Windows and Linux.
