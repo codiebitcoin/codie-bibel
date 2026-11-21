@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 	"path/filepath"
+	"sync"
 	"time"
 
 	"github.com/egoist/mygo"
@@ -80,22 +81,19 @@ func (a *app) personaCard(c *ui.Context) {
 			if p.Code != current {
 				continue
 			}
-			ui.Text(c, p.Summary).TextColor(a.pal.muted).FontSize(12.5).MaxWidth(520)
-			// The model and the voice, as they stand: which file is worn,
-			// and which voice speaks.
-			face := T("Wearing the app's default figure; upload a model to replace it.")
-			if p.Code == "jesus" {
-				face = T("Wearing the app's figure of Jesus; upload a model to replace it.")
+			// The figure itself, so the reader sees who they are dressing.
+			if img := personaPreview(p.Code); img != nil {
+				ui.Row(c).Gap(14).AlignItems(ui.Start).Children(func() {
+					ui.Image(c, img).Size(148, 148).Fit(ui.Contain).Radius(12)
+					ui.Column(c).Gap(4).Children(func() {
+						ui.Text(c, p.Summary).TextColor(a.pal.muted).FontSize(12.5).MaxWidth(430)
+						a.personaModelVoiceLines(c, p)
+					})
+				})
+			} else {
+				ui.Text(c, p.Summary).TextColor(a.pal.muted).FontSize(12.5).MaxWidth(520)
+				a.personaModelVoiceLines(c, p)
 			}
-			if a.seedVRMPersonal(p) != nil {
-				face = Tf("Wearing the model file %s.", p.VRM)
-			}
-			ui.Text(c, face).TextColor(a.pal.faint).FontSize(12)
-			voice := T("The device's own voice; upload a sample to clone the reader's.")
-			if v := a.settings.CodieVoice[p.Code]; v != "" {
-				voice = Tf("Voice %s, cloned on the device.", v)
-			}
-			ui.Text(c, voice).TextColor(a.pal.faint).FontSize(12)
 			// Give it another face, and another voice.
 			ui.Row(c).Gap(8).Children(func() {
 				if ui.Button(c.Key("model-upload-"+p.Name), T("Upload a model…")).Clicked() {
@@ -119,6 +117,43 @@ func (a *app) personaCard(c *ui.Context) {
 			}
 		}
 	})
+}
+
+// personaModelVoiceLines is the pair of faint lines under a persona's
+// summary: which model file it wears, and which voice speaks.
+func (a *app) personaModelVoiceLines(c *ui.Context, p *device.Persona) {
+	face := T("Wearing the app's default figure; upload a model to replace it.")
+	if p.Code == "jesus" {
+		face = T("Wearing the app's figure of Jesus; upload a model to replace it.")
+	}
+	if a.seedVRMPersonal(p) != nil {
+		face = Tf("Wearing the model file %s.", p.VRM)
+	}
+	ui.Text(c, face).TextColor(a.pal.faint).FontSize(12)
+	voice := T("The device's own voice; upload a sample to clone the reader's.")
+	if v := a.settings.CodieVoice[p.Code]; v != "" {
+		voice = Tf("Voice %s, cloned on the device.", v)
+	}
+	ui.Text(c, voice).TextColor(a.pal.faint).FontSize(12)
+}
+
+// personaPreview is the figure the persona wears, as a picture: rendered
+// once from the very models the app ships, and decoded once.
+var personaPreviews = struct {
+	once     sync.Once
+	jesus    ui.ImageSource
+	fallback ui.ImageSource
+}{}
+
+func personaPreview(code string) ui.ImageSource {
+	personaPreviews.once.Do(func() {
+		personaPreviews.jesus, _ = ui.DecodeImage(assets.JesusPreview)
+		personaPreviews.fallback, _ = ui.DecodeImage(assets.DefaultPreview)
+	})
+	if code == "jesus" {
+		return personaPreviews.jesus
+	}
+	return personaPreviews.fallback
 }
 
 // uploadModel asks for a VRM file, keeps it as the persona's model, and

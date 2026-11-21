@@ -12,8 +12,14 @@ import _ "embed"
 //go:embed jesus.vrm
 var JesusFigure []byte
 
-//go:embed jesus-voice.wav
-var SeedVoice []byte
+//go:embed jesus-preview.png
+var JesusPreview []byte
 
 //go:embed default-figure.vrm
 var DefaultFigure []byte
+
+//go:embed default-preview.png
+var DefaultPreview []byte
+
+//go:embed jesus-voice.wav
+var SeedVoice []byte

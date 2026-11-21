@@ -102,6 +102,10 @@ func (a *app) wizardCharacter(c *ui.Context) {
 	if chosen == "" {
 		chosen = device.DefaultPersona().Code
 	}
+	// The figure the choice wears, so the reader sees who they chose.
+	if img := personaPreview(chosen); img != nil {
+		ui.Image(c, img).Size(132, 132).Fit(ui.Contain).Radius(12)
+	}
 	for _, p := range device.Personas {
 		if p.Code == chosen {
 			ui.PrimaryButton(c.Key("choose-"+p.Name), p.Name)
