@@ -123,7 +123,12 @@ func TestDevicePageReads(t *testing.T) {
 	a.settings.Codie = &device.Creds{Addr: "x", LocalSecret: "s", Name: "Codie"}
 	a.wireDevice()
 	settled(tt)
-	if !hasText(tt, "Paired with Codie.") {
-		t.Error("the page doesn't say what it's paired with")
+	// The device's own name is a serial; the page says only that a Codie
+	// is paired, never the serial itself.
+	if !hasText(tt, T("Paired with your Codie.")) {
+		t.Error("the page doesn't say the pairing")
+	}
+	if hasText(tt, "Codie-b") {
+		t.Error("the page shows the device's serial")
 	}
 }

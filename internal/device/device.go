@@ -226,21 +226,38 @@ func (d *Device) Status(ctx context.Context) error {
 	return err
 }
 
+// VoiceGroups lists the voices the device keeps, its own and the cloned
+// ones, by their group. The raw answer, for the devtest to print.
+func (d *Device) VoiceGroups(ctx context.Context) (json.RawMessage, error) {
+	if !d.Paired() {
+		return nil, errNotPaired
+	}
+	return d.client.VoiceGroup(ctx)
+}
+
 // ApplyPersona dresses the device's character as a persona of the app's:
-// its name and its words, its action group, and its face, where a model
-// has been given.
+// its name and its words, its action group, its voice where one has been
+// cloned, and its face, where a model has been given.
 func (d *Device) ApplyPersona(ctx context.Context, p Persona, vrm []byte) error {
 	if !d.Paired() {
 		return errNotPaired
 	}
 	cc := d.cc(p.Name)
-	if _, err := d.client.SetInfo(ctx, cc, &clt01.CharacterSettings{
+	settings := &clt01.CharacterSettings{
 		Name:               p.Name,
 		Description:        p.Summary,
 		CharacterPrompt:    p.Prompt,
 		Sex:                p.Group.Sex,
 		AnimationIntensity: p.Group.Intensity,
-	}, false); err != nil {
+	}
+	if p.VoiceID != "" {
+		settings.VoiceID = p.VoiceID
+		// The voice travels with its group: the device keeps voices by
+		// groups, and the clone slots live in one of them. The device's
+		// own answer says which.
+		settings.GroupKey = d.voiceGroupOf(ctx, p.VoiceID)
+	}
+	if _, err := d.client.SetInfo(ctx, cc, settings, false); err != nil {
 		return err
 	}
 	if len(vrm) > 0 {
@@ -253,6 +270,30 @@ func (d *Device) ApplyPersona(ctx context.Context, p Persona, vrm []byte) error 
 		}
 	}
 	return nil
+}
+
+// voiceGroupOf says which of the device's voice groups holds that voice,
+// or "" when the device's answer doesn't say.
+func (d *Device) voiceGroupOf(ctx context.Context, voiceID string) string {
+	raw, err := d.VoiceGroups(ctx)
+	if err != nil {
+		return ""
+	}
+	var groups []struct {
+		GroupKey string   `json:"group_key"`
+		VoiceIDs []string `json:"voice_ids"`
+	}
+	if err := json.Unmarshal(raw, &groups); err != nil {
+		return ""
+	}
+	for _, g := range groups {
+		for _, id := range g.VoiceIDs {
+			if id == voiceID {
+				return g.GroupKey
+			}
+		}
+	}
+	return ""
 }
 
 // CloneVoice clones a voice from a sample the reader gives — a reading

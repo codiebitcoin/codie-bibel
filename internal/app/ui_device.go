@@ -31,11 +31,9 @@ func (a *app) devicePage(c *ui.Context) {
 	ui.Column(c).Grow(1).Padding(top, 24, bottom, 24).Gap(12).Children(func() {
 		paired := a.dev != nil && a.dev.Paired()
 		if paired {
-			name := a.dev.Name()
-			if name == "" {
-				name = T("the device")
-			}
-			ui.Text(c, Tf("Paired with %s.", name)).FontSize(15).FontWeight(600)
+			// The device calls itself by a serial; the reader doesn't need
+			// to read it, so the page says only that one is paired.
+			ui.Text(c, T("Paired with your Codie.")).FontSize(15).FontWeight(600)
 		} else {
 			ui.Row(c).Gap(10).AlignItems(ui.Center).Children(func() {
 				ui.Text(c, T("No device is paired. Pair one to hear the Bible read aloud.")).TextColor(a.pal.muted).FontSize(13)
@@ -83,15 +81,19 @@ func (a *app) personaCard(c *ui.Context) {
 				continue
 			}
 			ui.Text(c, p.Summary).TextColor(a.pal.muted).FontSize(12.5).MaxWidth(520)
-			// The face and the voice, as they stand.
+			// The model and the voice, as they stand: which file is worn,
+			// and which voice speaks.
 			face := T("Wearing the app's default figure; upload a model to replace it.")
+			if p.Code == "jesus" {
+				face = T("Wearing the app's figure of Jesus; upload a model to replace it.")
+			}
 			if a.seedVRMPersonal(p) != nil {
 				face = Tf("Wearing the model file %s.", p.VRM)
 			}
 			ui.Text(c, face).TextColor(a.pal.faint).FontSize(12)
 			voice := T("The device's own voice; upload a sample to clone the reader's.")
-			if a.settings.CodieVoice[p.Code] != "" {
-				voice = T("A voice of the reader's cloning.")
+			if v := a.settings.CodieVoice[p.Code]; v != "" {
+				voice = Tf("Voice %s, cloned on the device.", v)
 			}
 			ui.Text(c, voice).TextColor(a.pal.faint).FontSize(12)
 			// Give it another face, and another voice.
@@ -196,6 +198,46 @@ func (a *app) uploadVoice(p *device.Persona) {
 	}()
 }
 
+// seedVoiceClone clones a voice on the device for the seed blessing. The
+// app's own asks the device; a test puts a fake here.
+var seedVoiceClone = func(d *device.Device, audio []byte, name string) (string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 25*time.Minute)
+	defer cancel()
+	return d.CloneVoice(ctx, audio, "jesus-voice.wav", name)
+}
+
+// seedVoice clones the app's own blessing as the Jesus persona's voice,
+// once, at the first pairing: it is the voice the character speaks with
+// until the reader clones one of their own. It is the device's work and
+// takes its time; until it is done the device's own voice answers.
+func (a *app) seedVoice() {
+	if a.dev == nil || !a.dev.Paired() || a.settings.CodieSeedVoice {
+		return
+	}
+	if a.settings.CodieVoice["jesus"] != "" {
+		a.settings.CodieSeedVoice = true
+		a.settings.save()
+		return
+	}
+	a.settings.CodieSeedVoice = true
+	a.settings.save()
+	d, audio := a.dev, assets.SeedVoice
+	go func() {
+		voiceID, err := seedVoiceClone(d, audio, "Jesus")
+		a.post(func() {
+			if err != nil || voiceID == "" {
+				return // the device's own voice carries on
+			}
+			if a.settings.CodieVoice == nil {
+				a.settings.CodieVoice = map[string]string{}
+			}
+			a.settings.CodieVoice["jesus"] = voiceID
+			a.settings.save()
+			a.syncPersona()
+		})
+	}()
+}
+
 // actionCard is the action group: how the device's own motions read,
 // which set by the character's sex, and how strong.
 func (a *app) actionCard(c *ui.Context) {
@@ -279,11 +321,14 @@ func (a *app) seedVRMPersonal(p *device.Persona) []byte {
 }
 
 // seedVRM reads the persona's model: the reader's own file where they
-// gave one, else the app's default figure, which every persona wears
-// until replaced.
+// gave one, else the figure the app bundles for them — Jesus his own,
+// the others the app's default figure.
 func (a *app) seedVRM(p *device.Persona) []byte {
 	if b := a.seedVRMPersonal(p); b != nil {
 		return b
+	}
+	if p.Code == "jesus" {
+		return assets.JesusFigure
 	}
 	return assets.DefaultFigure
 }

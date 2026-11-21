@@ -1,6 +1,7 @@
 package app
 
 import (
+	"errors"
 	"os"
 	"path/filepath"
 	"testing"
@@ -10,6 +11,7 @@ import (
 	"github.com/egoist/mygo/ui"
 
 	"codie-bibel/internal/bible"
+	"codie-bibel/internal/device"
 	"codie-bibel/internal/store"
 )
 
@@ -36,6 +38,10 @@ func TestMain(m *testing.M) {
 		panic(err)
 	}
 	mygo.App.SetPath(mygo.PathUserData, dir)
+	// The tests never clone a voice on a real device.
+	seedVoiceClone = func(*device.Device, []byte, string) (string, error) {
+		return "", errors.New("no cloning in tests")
+	}
 	result := make(chan int)
 	go func() { result <- m.Run() }()
 	code := 0

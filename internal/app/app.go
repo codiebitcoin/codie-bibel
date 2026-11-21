@@ -199,6 +199,7 @@ func (a *app) wireDevice() {
 		a.queueProgress()
 		a.redraw()
 	}
+	a.seedVoice()
 }
 
 // wireHymns writes the hymns' audio to the reader's data, once, and makes

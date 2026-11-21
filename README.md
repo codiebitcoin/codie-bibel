@@ -12,7 +12,7 @@ Codie Bible is a desktop app for [CODE27's codie](https://code27.com) companion 
 - **Stories** — forty of the Bible's stories, from the creation to the new creation, told aloud on the device with resume.
 - **Seasons** — the church year from Advent to Christ the King, its feasts and colors, the Revised Common Lectionary's Sunday readings, and feast alarms on the device.
 - **Music** — eight public-domain hymns and chorales (Bach, the Sacred Harp, the US service bands' carols) playing quietly in the background.
-- **A default figure of its own** — both personas wear the app's bundled VRM (pixiv's MIT-licensed sample humanoid); upload a model or clone a voice to replace them.
+- **A figure and a voice of its own** — Jesus wears the app's own figure of him (a VRM brought from VRoid Hub), and at the first pairing the app quietly clones his voice from a blessing it ships; the monk wears pixiv's MIT-licensed sample humanoid. Upload a model or clone a voice to replace either.
 - **Eleven languages** — the interface speaks what the Bibles read: English, 简体中文, 繁體中文, Deutsch, Español, Français, Português, Русский, 日本語, 한국어, العربية (laid out from the right).
 
 Pairing walks four steps — the address, the six-figure code, the character, a verse read aloud. The device plays its own motions as it speaks; the app sets how strong they read, and may give a character a model and a cloned voice of the reader's own.
@@ -23,7 +23,9 @@ Pairing walks four steps — the address, the six-figure code, the character, a 
 - The hymns: Wikimedia Commons recordings, all public domain except Bach BWV 147 (CC0) and BWV 140 (CC BY-SA 2.0, MIT Concert Choir) — see [internal/hymn](internal/hymn).
 - Spurgeon's *Morning and Evening* (1866): public domain; transcription via the dwahrens/morning-and-evening data file (Apache-2.0 covers the packaging, not the text).
 - The lectionary table: from [marmanold/Date-Lectionary](https://github.com/marmanold/Date-Lectionary) (BSD-2-Clause); the readings themselves are scripture references.
-- The default figure: pixiv's [three-vrm](https://github.com/pixiv/three-vrm) sample humanoid (MIT).
+- The figure of Jesus: a VRM titled "Jesus" from [VRoid Hub](https://hub.vroid.com) (model 307680147834872455), used by the terms the model carries there.
+- The seed of Jesus's voice: a synthesized blessing (KJV words, a system voice); it is cloned on the reader's own device, never shipped as audio of a real person.
+- The monk's default figure: pixiv's [three-vrm](https://github.com/pixiv/three-vrm) sample humanoid (MIT).
 
 ## Building
 

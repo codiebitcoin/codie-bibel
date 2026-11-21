@@ -37,6 +37,10 @@ type settings struct {
 	CodiePersona string `json:"codiePersona,omitempty"`
 	// CodieVoice is the cloned voice each character wears, by its code.
 	CodieVoice map[string]string `json:"codieVoice,omitempty"`
+	// CodieSeedVoice says the app's own blessing has been cloned as the
+	// Jesus persona's voice — the app clones it once, at the first
+	// pairing, and never asks again.
+	CodieSeedVoice bool `json:"codieSeedVoice,omitempty"`
 	// CodieSetupDone says the pairing guide has been walked (or skipped).
 	CodieSetupDone bool `json:"codieSetupDone,omitempty"`
 	// MusicAuto plays the hymns when the app opens, as the reader turns

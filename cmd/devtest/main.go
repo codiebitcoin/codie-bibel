@@ -23,6 +23,7 @@ func main() {
 	speak := flag.Bool("speak", false, "read one verse aloud")
 	noPersona := flag.Bool("no-persona", false, "skip the persona apply")
 	clone := flag.String("clone", "", "an audio sample to clone as the character's voice")
+	voices := flag.Bool("voices", false, "print the device's voice groups and exit")
 	flag.Parse()
 	if *credsPath == "" {
 		fmt.Println("-creds is required")
@@ -73,6 +74,17 @@ func main() {
 		os.Exit(1)
 	}
 	fmt.Println("PASS status: the device answers")
+
+	// 1b. the voices it keeps, when asked for
+	if *voices {
+		raw, err := d.VoiceGroups(ctx)
+		if err != nil {
+			fmt.Println("FAIL voices:", err)
+			os.Exit(1)
+		}
+		fmt.Println(string(raw))
+		return
+	}
 
 	// 2. the character as the device holds it
 	if !*noPersona {
