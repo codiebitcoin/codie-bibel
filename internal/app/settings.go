@@ -14,8 +14,9 @@ import (
 // settings are the reader's choices, kept in settings.json in the user
 // data directory.
 type settings struct {
-	// Language is what the app speaks: i18n.English or i18n.Chinese, or
-	// i18n.System for the system's.
+	// Language is what the app speaks: one of i18n.Languages' codes. New
+	// installs read English; an old file may still say i18n.System, which
+	// follows the system's.
 	Language string `json:"language"`
 	// Appearance is light, dark, or system to follow the system.
 	Appearance string `json:"appearance"`
@@ -54,7 +55,7 @@ type settings struct {
 }
 
 func defaultSettings() settings {
-	return settings{Language: i18n.System, Appearance: "system", Volume: 0.8, SeasonReminders: true}
+	return settings{Language: i18n.English, Appearance: "system", Volume: 0.8, SeasonReminders: true}
 }
 
 func settingsPath() (string, error) {
