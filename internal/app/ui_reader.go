@@ -17,6 +17,7 @@ func (a *app) readPage(c *ui.Context) {
 	top, bottom := a.insets(c)
 	body := ui.Column(c).Grow(1).Padding(top, 24, bottom, 24).Gap(12)
 	body.Children(func() {
+		a.continueCard(c)
 		a.searchField(c)
 		switch {
 		case a.searchOpen():
@@ -29,6 +30,31 @@ func (a *app) readPage(c *ui.Context) {
 			a.booksGrid(c)
 		}
 	})
+}
+
+// continueCard is the way back to where the reader stood: the last
+// chapter read, one tap to go on.
+func (a *app) continueCard(c *ui.Context) {
+	if a.store == nil || a.reader().code != "" {
+		return
+	}
+	book, _, _ := a.store.Get("last:book")
+	chStr, _, _ := a.store.Get("last:chapter")
+	ch := 0
+	if chStr != "" {
+		ch, _ = strconv.Atoi(chStr)
+	}
+	if book == "" || ch < 1 {
+		return
+	}
+	name, _ := bible.BookName(book)
+	ref := bible.Ref{Book: book, Chapter: ch}
+	ui.Row(c).Gap(8).AlignItems(ui.Center).Children(func() {
+		if ui.PrimaryButton(c.Key("continue"), T("Continue reading")+": "+ref.String()).Clicked() {
+			a.openChapter(book, ch)
+		}
+	})
+	_ = name
 }
 
 // translationPicker is the button over the pages that drops the list of
@@ -44,14 +70,21 @@ func (a *app) translationPicker(c *ui.Context) {
 		chosen = tr.ID
 	}
 	sel := ui.SelectBase(c.Key("translation"), &chosen)
-	b := sel.Trigger.Height(30).PaddingX(10).Gap(6).Radius(8).AlignItems(ui.Center).Label(T("Translation") + ": " + name)
+	b := sel.Trigger.Height(30).PaddingX(10).Gap(6).Radius(8).AlignItems(ui.Center).
+		Background(a.pal.cardShade).Label(T("Translation") + ": " + name)
 	b.Children(func() {
 		ui.Text(c, name).FontSize(13).FontWeight(600)
+		ui.Text(c, "▾").FontSize(10).TextColor(a.pal.faint)
 	})
 	sel.Popup(func(panel ui.Element) {
 		panel.Margin(6, 0, 0, 0).Padding(5).Gap(1).MinWidth(220).Radius(12).
 			Background(a.pal.bg).Border(1, a.pal.hairline).Shadow(0, 12, 32, -6, ui.RGBA(0, 0, 0, 0.25))
+		lastLang := ""
 		for _, info := range a.bibles.List() {
+			if info.Language != lastLang {
+				lastLang = info.Language
+				ui.Text(c, info.Language).FontSize(10.5).FontWeight(600).TextColor(a.pal.faint).Padding(6, 8, 2, 8)
+			}
 			item := sel.Item(info.ID).Height(32).PaddingX(10).Gap(8).Radius(7).AlignItems(ui.Center).Label(info.Name + " (" + info.Short + ")")
 			if item.Highlighted() {
 				item.Background(a.pal.press)

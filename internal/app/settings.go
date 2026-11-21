@@ -25,6 +25,9 @@ type settings struct {
 	FontSize float64 `json:"fontSize"`
 	// Serif sets the reader in a serif face, as print Bibles read.
 	Serif bool `json:"serif"`
+	// Paragraph lays the chapter out as one flowing paragraph, rather
+	// than a row a verse.
+	Paragraph bool `json:"paragraph"`
 	// Translation is the ID of the Bible translation last read.
 	Translation string `json:"translation,omitempty"`
 	// Codie is the paired device, when there is one.

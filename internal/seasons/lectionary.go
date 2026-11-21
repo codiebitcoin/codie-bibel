@@ -79,6 +79,10 @@ func (l *Lectionary) For(day time.Time) (yearLetter, code string, lessons Lesson
 // codeOf works out the day's code in the table, by where the calendar has
 // it.
 func (l *Lectionary) codeOf(day time.Time, year int) string {
+	// The calendar works in UTC days: the reader's local date, read as
+	// its own day here.
+	y, m, d := day.Date()
+	day = time.Date(y, m, d, 0, 0, 0, 0, time.UTC)
 	// A holy day reads its own, whatever day of the week it falls on.
 	if code := holydayCode(day); code != "" {
 		return code

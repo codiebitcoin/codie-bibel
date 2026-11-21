@@ -109,6 +109,8 @@ func (a *app) openChapter(code string, chapter int) {
 	rs.chScroll = ui.ScrollState{}
 	if a.store != nil {
 		rs.highlights, _ = a.store.Highlights(tr.ID, code, chapter)
+		a.store.Put("last:book", code)
+		a.store.Put("last:chapter", strconv.Itoa(chapter))
 	} else {
 		rs.highlights = nil
 	}

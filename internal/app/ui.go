@@ -17,6 +17,8 @@ func (a *app) view(c *ui.Context) {
 	t.Selection = p.accent.Alpha(0.3)
 	c.SetTheme(&t)
 
+	a.shortcuts(c)
+
 	if c.Vibrancy() {
 		c.Root().Background(ui.Transparent)
 	}
@@ -71,8 +73,9 @@ func (a *app) sidebar(c *ui.Context) {
 	// Where nothing in it takes the press, the sidebar moves the window, as
 	// the title bar it reaches up into would.
 	ui.Column(c).Fill().Padding(top, 14, 14, 14).Gap(4).DragWindow().Children(func() {
-		ui.Row(c).Height(28).PaddingX(7).Gap(6).AlignItems(ui.Center).Children(func() {
-			ui.Text(c, mygo.App.Name()).FontSize(12.5).FontWeight(600).TextColor(a.pal.muted)
+		ui.Column(c).PaddingX(7).Gap(2).Children(func() {
+			ui.Text(c, mygo.App.Name()).FontSize(13).FontWeight(700).TextColor(a.pal.text)
+			ui.Text(c, T("Make your Codie as Bibel")).FontSize(10.5).TextColor(a.pal.faint)
 		})
 
 		ui.Scroll(c.Key("nav")).TrackScroll(&a.navScroll).Grow(1).Margin(0, -6).Padding(0, 6).Gap(4).Children(func() {
@@ -141,5 +144,22 @@ func (a *app) coming(c *ui.Context, what string) {
 	top, bottom := a.insets(c)
 	ui.Column(c).Grow(1).Padding(top, 24, bottom, 24).Gap(12).Children(func() {
 		ui.Text(c, what).TextColor(a.pal.faint).FontSize(13)
+	})
+}
+
+// shortcuts are the app's own: a number walks to its page, F finds in
+// the Bible, escape closes what the app has open.
+func (a *app) shortcuts(c *ui.Context) {
+	pages := []pageKind{pageRead, pageDevotions, pagePray, pageStories, pageSeasons, pageMusic, pageDevice, pageSettings}
+	for i, p := range pages {
+		p := p
+		c.OnShortcut(ui.Cmd, ui.Key1+ui.Key(i), func() { a.open(p) })
+	}
+	c.OnShortcut(ui.Cmd, ui.KeyF, func() { a.open(pageRead) })
+	c.OnShortcut(0, ui.KeyEscape, func() {
+		if a.wizard.open && !a.wizard.busy {
+			a.wizard.close()
+			a.redraw()
+		}
 	})
 }

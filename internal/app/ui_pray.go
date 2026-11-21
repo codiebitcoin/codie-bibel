@@ -42,8 +42,19 @@ func (a *app) prayerWalk(c *ui.Context) {
 		row.Children(func() {
 			ui.Row(c).Gap(8).AlignItems(ui.Center).Children(func() {
 				ui.Text(c, strconv.Itoa(i+1)+". "+step.Name).FontSize(14).FontWeight(600)
+				ui.Box(c).Grow(1)
+				// Any step opens on its name; the walk never traps.
+				if !chosen {
+					if ui.Button(c.Key("pray-open-"+step.Code), T("Open")).Clicked() {
+						a.prayStep = i
+						a.redraw()
+					}
+				}
 				if chosen {
-					ui.Box(c).Grow(1)
+					if i > 0 && ui.Button(c.Key("pray-back-"+step.Code), T("Back")).Clicked() {
+						a.prayStep--
+						a.redraw()
+					}
 					if !step.Privacy && ui.Button(c.Key("pray-next-"+step.Code), T("Next")).Clicked() {
 						a.prayStep++
 						a.redraw()

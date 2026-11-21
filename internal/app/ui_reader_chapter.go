@@ -12,8 +12,12 @@ import (
 // of Christ in red, the reader's highlights behind their verses, and the
 // verse's menu — listen, highlight, note, copy.
 
-// chapterView is the chapter open, its footer the chapter before and
-// after.
+// readerColumn is the width the reading holds, as a book reads: a long
+// line tires the eye.
+const readerColumn = float32(680)
+
+// chapterView is the chapter open: the breadcrumb, the verses in a
+// column a book would hold, and the footer.
 func (a *app) chapterView(c *ui.Context) {
 	rs := a.reader()
 	if rs.book == nil {
@@ -21,21 +25,86 @@ func (a *app) chapterView(c *ui.Context) {
 	}
 	verses := rs.book.Chapters[rs.chapter-1]
 	ui.Column(c).Grow(1).Gap(8).Children(func() {
+		a.breadcrumb(c)
 		ui.Scroll(c.Key("verses")).TrackScroll(&rs.chScroll).Grow(1).Children(func() {
-			ui.Column(c).Padding(4, 0).Gap(2).Children(func() {
-				for v, text := range verses {
-					verse := v + 1
-					a.verseRow(c, verse, text)
-					if rs.menuAt == verse {
-						a.verseMenu(c, verse)
-					}
-					if rs.noteAt == verse {
-						a.noteField(c, verse)
+			ui.Column(c).Padding(4, 0).Gap(2).MaxWidth(readerColumn).Children(func() {
+				if a.settings.Paragraph {
+					a.paragraphView(c, verses)
+				} else {
+					for v, text := range verses {
+						verse := v + 1
+						a.verseRow(c, verse, text)
+						if rs.menuAt == verse {
+							a.verseMenu(c, verse)
+						}
+						if rs.noteAt == verse {
+							a.noteField(c, verse)
+						}
 					}
 				}
 			})
 		})
 		a.chapterFooter(c)
+	})
+}
+
+// paragraphView reads the chapter as one flowing paragraph, the verse
+// numbers superscript inline, as a printed Bible lays it out.
+func (a *app) paragraphView(c *ui.Context, verses []string) {
+	ui.RichText(c, paragraphRuns(a, verses)...).FontSize(a.readerFontSize()).
+		TextColor(a.pal.text).LineHeight(1.7).MaxWidth(readerColumn)
+}
+
+// paragraphRuns is the whole chapter as inline runs, superscript numbers
+// and the red of Christ's words among them.
+func paragraphRuns(a *app, verses []string) []ui.Span {
+	var runs []ui.Span
+	red := ui.Hex("#c0392b")
+	if a.pal.dark {
+		red = ui.Hex("#e17055")
+	}
+	for v, text := range verses {
+		verse := v + 1
+		verseColor := a.pal.text
+		if bible.InRed(a.reader().code, a.reader().chapter, verse) {
+			verseColor = red
+		}
+		runs = append(runs, ui.Span{Text: strconv.Itoa(verse) + " ", Size: a.readerFontSize() - 5, Weight: 600, Color: a.pal.accent})
+		runs = append(runs, ui.Span{Text: text + " ", Color: verseColor})
+	}
+	return runs
+}
+
+// breadcrumb says where the reader stands: Read, the book, the chapter —
+// each of the first two a way back.
+func (a *app) breadcrumb(c *ui.Context) {
+	rs := a.reader()
+	name, _ := bible.BookName(rs.code)
+	ui.Row(c).Gap(6).AlignItems(ui.Center).Children(func() {
+		if ui.Button(c.Key("crumb-books"), T("Read")).Clicked() {
+			rs.code, rs.chapter, rs.menuAt, rs.noteAt = "", 0, 0, 0
+			a.redraw()
+		}
+		ui.Text(c, "›").TextColor(a.pal.faint).FontSize(12)
+		if ui.Button(c.Key("crumb-book"), name.En).Clicked() {
+			rs.chapter, rs.menuAt, rs.noteAt = 0, 0, 0
+			a.redraw()
+		}
+		ui.Text(c, "›").TextColor(a.pal.faint).FontSize(12)
+		ui.Text(c, strconv.Itoa(rs.chapter)).FontSize(13).FontWeight(600)
+		ui.Box(c).Grow(1)
+		// Verse by verse, or flowing as a paragraph.
+		if a.settings.Paragraph {
+			if ui.Button(c.Key("layout"), T("Verse by verse")).Clicked() {
+				a.settings.Paragraph = false
+				a.settings.save()
+				a.redraw()
+			}
+		} else if ui.Button(c.Key("layout"), T("As a paragraph")).Clicked() {
+			a.settings.Paragraph = true
+			a.settings.save()
+			a.redraw()
+		}
 	})
 }
 
@@ -59,7 +128,7 @@ func (a *app) verseRow(c *ui.Context, verse int, text string) {
 			TextColor(a.pal.accent).FontWeight(600)
 		runs := a.verseRuns(verse, text)
 		ui.RichText(c, runs...).FontSize(a.readerFontSize()).
-			TextColor(a.pal.text).Grow(1)
+			TextColor(a.pal.text).Grow(1).MaxWidth(readerColumn).LineHeight(1.65)
 	})
 	if clicked {
 		rs.menuAt, rs.noteAt = verse, 0
@@ -93,14 +162,14 @@ func (a *app) verseRuns(verse int, text string) []ui.Span {
 // copy.
 func (a *app) verseMenu(c *ui.Context, verse int) {
 	ui.Row(c.Key("verse-menu")).Padding(4, 20).Gap(8).Children(func() {
-		if ui.Button(c.Key("menu-listen"), T("Listen")).Clicked() {
+		a.listenButton(c, "menu-listen", func() {
 			rs := a.reader()
 			ref := bible.Ref{Book: rs.code, Chapter: rs.chapter, Verse: verse, EndVerse: verse}
 			name, _ := bible.BookName(rs.code)
 			a.listenRef(ref, name.En+" "+strconv.Itoa(rs.chapter)+":"+strconv.Itoa(verse))
 			rs.menuAt = 0
 			a.redraw()
-		}
+		})
 		marked := a.reader().highlights[verse]
 		label := T("Highlight")
 		var b ui.Element
@@ -154,7 +223,6 @@ func (a *app) noteField(c *ui.Context, verse int) {
 // between.
 func (a *app) chapterFooter(c *ui.Context) {
 	rs := a.reader()
-	name, _ := bible.BookName(rs.code)
 	ref := bible.Ref{Book: rs.code, Chapter: rs.chapter}
 	ui.Row(c).Gap(10).AlignItems(ui.Center).Padding(6, 0).Children(func() {
 		if ui.Button(c.Key("prev-chapter"), "‹").Clicked() {
@@ -165,10 +233,7 @@ func (a *app) chapterFooter(c *ui.Context) {
 			a.nextChapter()
 		}
 		ui.Box(c).Grow(1)
-		if ui.Button(c.Key("listen-chapter"), T("Listen")).Clicked() {
-			a.listenChapter()
-		}
-		_ = name
+		a.listenButton(c, "listen-chapter", func() { a.listenChapter() })
 	})
 }
 

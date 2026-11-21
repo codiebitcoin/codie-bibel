@@ -3,8 +3,10 @@
 package app
 
 import (
+	"context"
 	"path/filepath"
 	"runtime"
+	"time"
 
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
@@ -52,9 +54,11 @@ type app struct {
 	hymnFile map[string]string
 
 	// The reader's own data, and the Read page's state.
-	store    *store.Store
-	rd       *readerState
-	spurgeon *devotion.Spurgeon
+	store        *store.Store
+	rd           *readerState
+	spurgeon     *devotion.Spurgeon
+	spurgeonHalf string
+	spurgeonOpen bool
 
 	// The prayer walk: the step it stands at, the confession's field,
 	// and the prayer list's field.
@@ -118,6 +122,35 @@ func userDataDir(sub string) string {
 		dir = "."
 	}
 	return filepath.Join(dir, sub)
+}
+
+// syncPersona sends the chosen character back to the device at startup:
+// another app may have changed it, and the app's choice is the one that
+// stands. Nothing of it shows unless it fails.
+func (a *app) syncPersona() {
+	if a.dev == nil || !a.dev.Paired() {
+		return
+	}
+	code := a.settings.CodiePersona
+	if code == "" {
+		code = device.DefaultPersona().Code
+	}
+	p := device.PersonaByCode(code)
+	if p == nil {
+		return
+	}
+	with := *p
+	if v := a.settings.CodieVoice[code]; v != "" {
+		with.VoiceID = v
+	}
+	vrm := a.seedVRM(&with)
+	go func() {
+		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+		defer cancel()
+		if err := a.dev.ApplyPersona(ctx, with, vrm); err != nil {
+			a.post(func() { a.toast = err.Error(); a.redraw() })
+		}
+	}()
 }
 
 // open shows a page.
@@ -206,6 +239,7 @@ func Run(bibles *bible.Registry) error {
 		if st, err := store.New(userDataDir("store")); err == nil {
 			a.store = st
 		}
+		a.syncPersona()
 		a.win = mygo.NewWindow(mygo.WindowOptions{
 			Title:                mygo.App.Name(),
 			Width:                1120,

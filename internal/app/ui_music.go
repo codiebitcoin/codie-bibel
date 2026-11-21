@@ -61,7 +61,7 @@ func (a *app) hymnRow(c *ui.Context, i int, t hymn.Track) {
 		if playing && a.pl.Playing() {
 			mark = "▶"
 		}
-		ui.Text(c, mark).FontSize(12).TextColor(a.pal.accent)
+		ui.Text(c, mark).FontSize(12).TextColor(a.pal.faint)
 		ui.Column(c).Gap(1).Children(func() {
 			ui.Text(c, t.Title).FontSize(13.5).FontWeight(500)
 			ui.Text(c, t.Artist).FontSize(11.5).TextColor(a.pal.faint)

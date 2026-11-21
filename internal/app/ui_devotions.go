@@ -19,7 +19,7 @@ func (a *app) devotionsPage(c *ui.Context) {
 	top, bottom := a.insets(c)
 	now := time.Now()
 	ui.Scroll(c.Key("devotions")).Grow(1).Children(func() {
-		ui.Column(c).Padding(top, 24, bottom, 24).Gap(20).Children(func() {
+		ui.Column(c).Padding(top, 24, bottom, 24).Gap(20).MaxWidth(760).Children(func() {
 			a.votdCard(c, now)
 			a.spurgeonCard(c, now)
 			a.plansCard(c, now)
@@ -37,7 +37,7 @@ func (a *app) votdCard(c *ui.Context, now time.Time) {
 	a.card(c, T("Verse of the Day"), ref.String(), func() {
 		if tr != nil {
 			if text, ok := tr.Verse(code, ch, vs); ok {
-				ui.Text(c, text).FontSize(15).TextColor(a.pal.text)
+				ui.Text(c, text).FontSize(19).LineHeight(1.6).TextColor(a.pal.text)
 			}
 		}
 	}, func() {
@@ -102,15 +102,18 @@ func (a *app) plansCard(c *ui.Context, now time.Time) {
 }
 
 // card is one devotion card: its title, its line under it, its body, and
-// what Listen reads.
+// what Listen reads. Listen is disabled until a device is paired.
 func (a *app) card(c *ui.Context, title, line string, body func(), listen func()) {
+	a.cardFull(c, title, line, body, listen)
+}
+
+// cardFull is card with the header row open for extra controls.
+func (a *app) cardFull(c *ui.Context, title, line string, body func(), listen func()) {
 	ui.Column(c).Padding(16, 18).Gap(8).Radius(12).Background(a.pal.cardShade).Children(func() {
 		ui.Row(c).Gap(8).AlignItems(ui.Center).Children(func() {
 			ui.Text(c, title).FontSize(12).FontWeight(600).TextColor(a.pal.muted)
 			ui.Box(c).Grow(1)
-			if ui.Button(c.Key("listen-"+title), T("Listen")).Clicked() {
-				listen()
-			}
+			a.listenButton(c, "listen-"+title, listen)
 		})
 		ui.Text(c, line).FontSize(13).FontWeight(600).TextColor(a.pal.accent)
 		body()

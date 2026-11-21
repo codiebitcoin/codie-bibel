@@ -34,8 +34,8 @@ var Tracks = []Track{
 	{ID: "mighty-fortress", Title: "A Mighty Fortress Is Our God", Artist: "The Army and Navy Hymnal (1922)", File: "mighty-fortress.ogg", Duration: 223 * time.Second, License: "Public domain"},
 	{ID: "amazing-grace", Title: "Amazing Grace", Artist: "Original Sacred Harp Choir (1922)", File: "amazing-grace.ogg", Duration: 120 * time.Second, License: "Public domain"},
 	{ID: "silent-night", Title: "Silent Night", Artist: "The US Army Chorus", File: "silent-night.ogg", Duration: 150 * time.Second, License: "Public domain (US Government work)"},
-	{ID: "joy-world-army", Title: "Joy to the World", Artist: "The US Army Band Chorus", File: "joy-to-world-army.ogg", Duration: 75 * time.Second, License: "Public domain (US Government work)"},
-	{ID: "joy-world-diplomats", Title: "Joy to the World (The Diplomats)", Artist: "The US Air Force Band", File: "joy-to-world-diplomats.ogg", Duration: 268 * time.Second, License: "Public domain (US Government work)"},
+	{ID: "joy-world-army", Title: "Joy to the World (choral)", Artist: "The US Army Band Chorus", File: "joy-to-world-army.ogg", Duration: 75 * time.Second, License: "Public domain (US Government work)"},
+	{ID: "joy-world-diplomats", Title: "Joy to the World (brass)", Artist: "The US Air Force Band", File: "joy-to-world-diplomats.ogg", Duration: 268 * time.Second, License: "Public domain (US Government work)"},
 }
 
 // ByID is the hymn of that ID, or nil.

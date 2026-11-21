@@ -105,6 +105,25 @@ func topBar(c *ui.Context) float32 {
 	return max(c.TitleBar().Height, topBarHeight)
 }
 
+// listenButton is the Listen button of anything the device reads: it is
+// disabled until a device is paired, so a tap never dies quietly.
+func (a *app) listenButton(c *ui.Context, key string, fn func()) {
+	paired := a.dev != nil && a.dev.Paired()
+	b := ui.Button(c.Key(key), T("Listen")).Disabled(!paired)
+	if b.Clicked() {
+		fn()
+	}
+}
+
+// inDays reads how many days ahead a day lies, as the language counts
+// them: one day, two days.
+func inDays(days int) string {
+	if days == 1 {
+		return T("1 day")
+	}
+	return Tf("%d days", days)
+}
+
 // cardBg is a card's background, filled when it's the one chosen.
 func cardBg(p palette, chosen bool) ui.Color {
 	if chosen {

@@ -29,16 +29,26 @@ func (a *app) devicePage(c *ui.Context) {
 	})
 	top, bottom := a.insets(c)
 	ui.Column(c).Grow(1).Padding(top, 24, bottom, 24).Gap(12).Children(func() {
-		switch {
-		case a.dev == nil || !a.dev.Paired():
-			ui.Text(c, T("No device is paired. Pair one to hear the Bible read aloud.")).TextColor(a.pal.muted).FontSize(13)
-		default:
+		paired := a.dev != nil && a.dev.Paired()
+		if paired {
 			name := a.dev.Name()
 			if name == "" {
 				name = T("the device")
 			}
 			ui.Text(c, Tf("Paired with %s.", name)).FontSize(15).FontWeight(600)
-			a.personaCard(c)
+		} else {
+			ui.Row(c).Gap(10).AlignItems(ui.Center).Children(func() {
+				ui.Text(c, T("No device is paired. Pair one to hear the Bible read aloud.")).TextColor(a.pal.muted).FontSize(13)
+				ui.Box(c).Grow(1)
+				if ui.PrimaryButton(c.Key("pair-here"), T("Pair a device")).Clicked() {
+					a.wizard.open, a.wizard.step = true, 0
+					a.redraw()
+				}
+			})
+			ui.Text(c, T("You can still choose the character and give it a model and a voice now; the pairing sends them over.")).TextColor(a.pal.faint).FontSize(12)
+		}
+		a.personaCard(c)
+		if paired {
 			a.actionCard(c)
 		}
 	})
@@ -89,10 +99,22 @@ func (a *app) personaCard(c *ui.Context) {
 				if ui.Button(c.Key("model-upload-"+p.Name), T("Upload a model…")).Clicked() {
 					a.uploadModel(p)
 				}
-				if ui.Button(c.Key("voice-upload-"+p.Name), T("Upload a voice…")).Clicked() {
-					a.uploadVoice(p)
+				voiceKey := "voice-upload-" + p.Name
+				if a.dev != nil && a.dev.Paired() {
+					if ui.Button(c.Key(voiceKey), T("Upload a voice…")).Clicked() {
+						a.uploadVoice(p)
+					}
+				} else {
+					ui.Button(c.Key(voiceKey), T("Upload a voice…")).Disabled(true)
 				}
 			})
+			// Where a model file the reader downloads goes.
+			if p.VRM != "" && a.seedVRM(p) == nil {
+				ui.Text(c, Tf("No model yet. Download one — as hub.vroid.com's Jesus models — and put it at %s", filepath.Join(userDataDir(""), p.VRM))).TextColor(a.pal.faint).FontSize(11.5)
+			}
+			if a.dev == nil || !a.dev.Paired() {
+				ui.Text(c, T("Cloning a voice needs the paired device; pair one and come back to it.")).TextColor(a.pal.faint).FontSize(11.5)
+			}
 		}
 	})
 }

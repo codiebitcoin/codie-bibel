@@ -85,6 +85,7 @@ func (a *app) wizardAddress(c *ui.Context) {
 	ui.Text(c, T("The device's address")).FontSize(20).FontWeight(700)
 	ui.Text(c, T("Type the address the device's screen shows, as 192.168.1.10:8081.")).TextColor(a.pal.muted).FontSize(13)
 	ui.TextInput(c.Key("address"), &a.wizard.addr).Placeholder("192.168.1.10:8081").Label(T("Device address")).Width(280).FontSize(13.5)
+	ui.Text(c, T("The port is 8081 unless the device says otherwise.")).TextColor(a.pal.faint).FontSize(12)
 }
 
 // wizardCode is the third step: the code the device shows.
@@ -125,6 +126,12 @@ func (a *app) wizardFooter(c *ui.Context) {
 			a.redraw()
 		}
 		ui.Box(c).Grow(1)
+		if a.wizard.step > 0 && !a.wizard.busy {
+			if ui.Button(c.Key("guide-back"), T("Back")).Clicked() {
+				a.wizard.step--
+				a.redraw()
+			}
+		}
 		switch a.wizard.step {
 		case 0:
 			if ui.PrimaryButton(c.Key("guide-next"), T("Pair a device")).Clicked() {

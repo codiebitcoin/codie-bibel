@@ -36,7 +36,11 @@ func (a *app) seasonCard(c *ui.Context) {
 			ui.Text(c, season.Name).FontSize(18).FontWeight(700)
 			ui.Box(c).Grow(1)
 			if days >= 0 {
-				ui.Text(c, Tf("%d days to %s", days, next.Name)).FontSize(12.5).TextColor(a.pal.muted)
+				line := Tf("%d days to %s", days, next.Name)
+				if days == 1 {
+					line = Tf("1 day to %s", next.Name)
+				}
+				ui.Text(c, line).FontSize(12.5).TextColor(a.pal.muted)
 			}
 		})
 		if feast != nil {
@@ -62,20 +66,26 @@ func seasonColor(color string) ui.Color {
 }
 
 // weekReadingsCard is the Sunday's readings, as the lectionary keeps
-// them, each opening in Read and all of them queuing to the device.
+// them, each opening in Read and all of them queuing to the device. On a
+// weekday it shows the Sunday that comes.
 func (a *app) weekReadingsCard(c *ui.Context) {
 	l, err := seasons.NewLectionary()
 	if err != nil {
 		return
 	}
-	yearLetter, _, lessons, ok := l.For(time.Now())
+	sunday := time.Now()
+	for sunday.Weekday() != time.Sunday {
+		sunday = sunday.AddDate(0, 0, 1)
+	}
+	yearLetter, _, lessons, ok := l.For(sunday)
 	if !ok {
 		return
 	}
+	when := Tf("Sunday, %s", sunday.Format("Jan 2"))
 	ui.Column(c).Gap(8).Children(func() {
 		ui.Row(c).Gap(8).AlignItems(ui.Center).Children(func() {
 			ui.Text(c, T("This week's readings")).FontSize(12).FontWeight(600).TextColor(a.pal.muted)
-			ui.Text(c, "Year "+yearLetter).FontSize(11.5).TextColor(a.pal.faint)
+			ui.Text(c, when+" · Year "+yearLetter).FontSize(11.5).TextColor(a.pal.faint)
 		})
 		for _, lesson := range lessons {
 			if lesson == "" {
@@ -103,21 +113,23 @@ func (a *app) feastsCard(c *ui.Context) {
 		now := time.Now()
 		for _, f := range feasts {
 			days := daysTo(now, f.Date)
-			ui.Row(c).Gap(8).AlignItems(ui.Center).Children(func() {
+			row := ui.Row(c.Key("feast-"+f.Code)).Gap(8).AlignItems(ui.Center).Padding(3, 6).Radius(8)
+			bg := ui.Transparent
+			if row.Hovered() {
+				bg = a.pal.hover
+			}
+			row.Background(bg)
+			row.Children(func() {
 				ui.Text(c, f.Name).FontSize(13)
 				ui.Box(c).Grow(1)
 				mark := f.Date.Format("Jan 2")
 				if days >= 0 {
-					mark = Tf("in %d days", days) + " · " + mark
+					mark = inDays(days) + " · " + mark
 				}
 				ui.Text(c, mark).FontSize(12).TextColor(a.pal.faint)
-				if days >= 0 && days <= 7 {
-					if ui.Button(c.Key("feast-soon-listen-"+f.Code), T("Listen")).Clicked() {
-						a.listenFeast(f.Code, f.Name)
-					}
-					if ui.Button(c.Key("feast-soon-alarm-"+f.Code), T("Remind me")).Clicked() {
-						a.setFeastAlarm(f)
-					}
+				a.listenButton(c, "feast-listen-"+f.Code, func() { a.listenFeast(f.Code, f.Name) })
+				if ui.Button(c.Key("feast-alarm-"+f.Code), T("Remind me")).Clicked() {
+					a.setFeastAlarm(f)
 				}
 			})
 		}
