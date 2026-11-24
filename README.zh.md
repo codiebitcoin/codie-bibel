@@ -6,6 +6,8 @@
 
 Codie Bible 是 [CODE27 codie](https://code27.com) 伴读设备的桌面应用,用 [egoist/mygo](https://github.com/egoist/mygo) 构建 —— 纯 Go、无 cgo,原生窗口覆盖 macOS / Windows / Linux。
 
+English: [README.md](README.md) · 日本語: [README.ja.md](README.ja.md)
+
 ## 功能
 
 - **阅读** —— 内置 13 个公有领域译本(KJV、ASV、WEB、和合本简繁、路德1912、RV1909、Louis Segond 1910、Almeida、俄语_synodal、口語訳、개역한글、Smith–Van Dyke),全文搜索、划线、笔记、耶稣的话红字显示。

@@ -6,6 +6,8 @@
 
 Codie Bible is a desktop app for [CODE27's codie](https://code27.com) companion device, built with [egoist/mygo](https://github.com/egoist/mygo) — pure Go, no cgo, native windows on macOS, Windows and Linux.
 
+中文: [README.zh.md](README.zh.md) · 日本語: [README.ja.md](README.ja.md)
+
 ## What it does
 
 - **Read** — thirteen public-domain Bibles (KJV, ASV, WEB, 和合本 简体/繁體, Luther 1912, Reina-Valera 1909, Louis Segond 1910, Almeida, Синодальный, 口語訳, 개역한글, Smith–Van Dyke), search over any of them, highlights, notes, and the words of Christ in red.

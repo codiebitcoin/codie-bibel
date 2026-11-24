@@ -4,7 +4,7 @@ export default ({ command }: { command: string }) => ({
   name: "Codie Bible",
   identifier: "io.github.codiebitcoin.codie-bibel",
   slug: "codie-bibel",
-  version: "0.1.0",
+  version: "0.2.0",
   out: "build",
   urlSchemes: [command === "dev" ? "codie-bibel-dev" : "codie-bibel"],
   macos: {
